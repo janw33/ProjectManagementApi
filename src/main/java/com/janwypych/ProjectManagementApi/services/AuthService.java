@@ -23,7 +23,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public AuthResponse createUser(CreateUserRequest request) {
+    public AuthResponse register(CreateUserRequest request) {
         if(userRepository.existsByUsername(request.username()))
             throw new UsernameAlreadyExistsException("Username already exists");
 

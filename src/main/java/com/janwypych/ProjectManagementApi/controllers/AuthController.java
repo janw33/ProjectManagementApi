@@ -24,6 +24,6 @@ public class AuthController {
     public ResponseEntity<AuthResponse> createUser(
             @Valid @RequestBody CreateUserRequest createUserRequest
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.createUser(createUserRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(createUserRequest));
     }
 }
