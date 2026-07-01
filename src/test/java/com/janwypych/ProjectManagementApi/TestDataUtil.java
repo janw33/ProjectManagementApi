@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi;
 
+import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 
@@ -14,6 +15,19 @@ public final class TestDataUtil {
                 .build();
     }
     public static User user() {
-        return new User(1L, "test", "test@email.com", "testPassword", LocalDateTime.of(1, 1, 1, 1, 1, 1));
+        return User.builder()
+                .id(1L)
+                .username("test")
+                .email("test@email.com")
+                .password("testPassword")
+                .createdAt(LocalDateTime.of(1, 1, 1, 1, 1, 1, 1))
+                .build();
+    }
+
+    public static LoginRequest loginRequest() {
+        return LoginRequest.builder()
+                .email("test@email.com")
+                .password("testPassword")
+                .build();
     }
 }

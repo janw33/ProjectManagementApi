@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,10 +47,10 @@ class RegisterTests {
     }
 
     @Test
-    public void shouldThrowUsernameAlreadyExistsException() {
+    void shouldThrowUsernameAlreadyExistsException() {
         RegisterRequest request = TestDataUtil.createUserRequest();
 
-        when(userRepository.existsByUsername(anyString()))
+        when(userRepository.existsByUsername(request.getUsername()))
                 .thenReturn(true);
 
         assertThrows(
@@ -63,13 +63,13 @@ class RegisterTests {
     }
 
     @Test
-    public void shouldThrowEmailAlreadyExistsException() {
+    void shouldThrowEmailAlreadyExistsException() {
         RegisterRequest request = TestDataUtil.createUserRequest();
 
-        when(userRepository.existsByUsername(anyString()))
+        when(userRepository.existsByUsername(request.getUsername()))
                 .thenReturn(false);
 
-        when(userRepository.existsByEmail(anyString()))
+        when(userRepository.existsByEmail(request.getEmail()))
                 .thenReturn(true);
 
         assertThrows(
@@ -82,7 +82,7 @@ class RegisterTests {
     }
 
     @Test
-    public void shouldRegisterUserSuccessfully() {
+    void shouldRegisterUserSuccessfully() {
         RegisterRequest request = TestDataUtil.createUserRequest();
 
         when(userRepository.existsByUsername(request.getUsername()))
@@ -112,6 +112,7 @@ class RegisterTests {
         assertNotNull(result);
         assertEquals("jwt-token", result.getToken());
 
+        verify(passwordEncoder).encode(request.getPassword());
         verify(userRepository).save(any(User.class));
         verify(jwtService).generateToken(savedUser);
     }
