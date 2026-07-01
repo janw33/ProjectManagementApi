@@ -201,7 +201,8 @@ public class RegisterTests {
 
         performRegister(registerRequest,
                 status().isConflict(),
-                jsonPath("$.error").value("USERNAME_ALREADY_EXISTS"));
+                jsonPath("$.error").value("USERNAME_ALREADY_EXISTS"),
+                jsonPath("$.message").value("Username already exists"));
     }
 
     @Test
@@ -213,7 +214,8 @@ public class RegisterTests {
 
         performRegister(registerRequest,
                 status().isConflict(),
-                jsonPath("$.error").value("EMAIL_ALREADY_EXISTS"));
+                jsonPath("$.error").value("EMAIL_ALREADY_EXISTS"),
+                jsonPath("$.message").value("Email already exists"));
     }
 
     @Test
