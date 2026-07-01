@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.services.auth;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.CreateUserRequest;
+import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.exceptions.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.UsernameAlreadyExistsException;
@@ -48,7 +48,7 @@ class RegisterTests {
 
     @Test
     public void shouldThrowUsernameAlreadyExistsException() {
-        CreateUserRequest request = TestDataUtil.createUserRequest();
+        RegisterRequest request = TestDataUtil.createUserRequest();
 
         when(userRepository.existsByUsername(anyString()))
                 .thenReturn(true);
@@ -64,7 +64,7 @@ class RegisterTests {
 
     @Test
     public void shouldThrowEmailAlreadyExistsException() {
-        CreateUserRequest request = TestDataUtil.createUserRequest();
+        RegisterRequest request = TestDataUtil.createUserRequest();
 
         when(userRepository.existsByUsername(anyString()))
                 .thenReturn(false);
@@ -83,7 +83,7 @@ class RegisterTests {
 
     @Test
     public void shouldRegisterUserSuccessfully() {
-        CreateUserRequest request = TestDataUtil.createUserRequest();
+        RegisterRequest request = TestDataUtil.createUserRequest();
 
         when(userRepository.existsByUsername(request.getUsername()))
                 .thenReturn(false);

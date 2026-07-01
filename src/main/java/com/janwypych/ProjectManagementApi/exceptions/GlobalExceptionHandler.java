@@ -15,6 +15,34 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationErrorResponse> handleValidationException(
+            MethodArgumentNotValidException exception,
+            HttpServletRequest request
+    ) {
+        Map<String, String> validationErrors = new HashMap<>();
+
+        exception.getBindingResult()
+                .getFieldErrors()
+                .forEach(error ->
+                        validationErrors.put(
+                                error.getField(),
+                                error.getDefaultMessage()
+                        )
+                );
+
+        ValidationErrorResponse response =
+                ValidationErrorResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error("VALIDATION_ERROR")
+                        .validationErrors(validationErrors)
+                        .path(request.getRequestURI())
+                        .build();
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleUsernameAlreadyExistsException(
             UsernameAlreadyExistsException exception,
@@ -47,31 +75,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidationException(
-            MethodArgumentNotValidException exception,
-            HttpServletRequest request
-    ) {
-        Map<String, String> validationErrors = new HashMap<>();
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentialsException(
+            InvalidCredentialsException exception,
+            HttpServletRequest request) {
 
-        exception.getBindingResult()
-                .getFieldErrors()
-                .forEach(error ->
-                        validationErrors.put(
-                                error.getField(),
-                                error.getDefaultMessage()
-                        )
-                );
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .error("INVALID_CREDENTIALS")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .build();
 
-        ValidationErrorResponse response =
-                ValidationErrorResponse.builder()
-                        .timestamp(LocalDateTime.now())
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error("VALIDATION_ERROR")
-                        .validationErrors(validationErrors)
-                        .path(request.getRequestURI())
-                        .build();
-
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
 }

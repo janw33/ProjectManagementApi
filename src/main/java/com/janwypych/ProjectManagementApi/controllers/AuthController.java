@@ -1,7 +1,8 @@
 package com.janwypych.ProjectManagementApi.controllers;
 
 import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.CreateUserRequest;
+import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
+import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
 import com.janwypych.ProjectManagementApi.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,16 @@ public class AuthController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<AuthResponse> createUser(
-            @Valid @RequestBody CreateUserRequest createUserRequest
+    public ResponseEntity<AuthResponse> register(
+            @Valid @RequestBody RegisterRequest registerRequest
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(createUserRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerRequest));
+    }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest loginRequest
+    ) {
+        return ResponseEntity.ok(authService.login(loginRequest));
     }
 }

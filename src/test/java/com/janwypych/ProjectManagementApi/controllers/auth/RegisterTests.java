@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.controllers.auth;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.CreateUserRequest;
+import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
 import com.janwypych.ProjectManagementApi.exceptions.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.UsernameAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.services.AuthService;
@@ -34,7 +34,7 @@ public class RegisterTests {
     @MockitoBean
     private AuthService authService;
 
-    private void performRegister(CreateUserRequest request, ResultMatcher... matchers) throws Exception {
+    private void performRegister(RegisterRequest request, ResultMatcher... matchers) throws Exception {
         String requestJson = objectMapper.writeValueAsString(request);
 
         var result = mockMvc.perform(
@@ -50,10 +50,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenUsernameIsBlank() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setUsername(null);
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setUsername(null);
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.username").value("Username cannot be blank"));
@@ -61,10 +61,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenUsernameIsTooShort() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setUsername("aa");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setUsername("aa");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.username").value("Username must be between 3 and 30 characters"));
@@ -72,10 +72,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenUsernameIsTooLong() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setUsername("a".repeat(31));
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setUsername("a".repeat(31));
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.username").value("Username must be between 3 and 30 characters"));
@@ -83,10 +83,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenUsernameStartsWith_() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setUsername("_test");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setUsername("_test");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.username").value("Username must contain only letters, numbers and underscores"));
@@ -94,10 +94,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenUsernameEndsWith_() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setUsername("test_");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setUsername("test_");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.username").value("Username must contain only letters, numbers and underscores"));
@@ -105,10 +105,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenUsernameContainsSpecialCharacter() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setUsername("test-test");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setUsername("test-test");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.username").value("Username must contain only letters, numbers and underscores"));
@@ -116,10 +116,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenUsernameContainsSpace() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setUsername("test test");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setUsername("test test");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.username").value("Username must contain only letters, numbers and underscores"));
@@ -127,10 +127,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenEmailIsBlank() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setEmail(null);
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setEmail(null);
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.email").value("Email cannot be blank"));
@@ -138,10 +138,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenEmailIsTooLong() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setEmail("a".repeat(64) + "@" + "a".repeat(32) + ".com");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setEmail("a".repeat(64) + "@" + "a".repeat(32) + ".com");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.email").value("Email must be at most 100 characters long"));
@@ -149,10 +149,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenEmailIsBadFormat() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setEmail("a".repeat(65) + "@email.com");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setEmail("a".repeat(65) + "@email.com");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.email").value("Email must be a valid email address"));
@@ -160,10 +160,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenPasswordIsBlank() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setPassword(null);
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setPassword(null);
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.password").value("Password cannot be blank"));
@@ -171,10 +171,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenPasswordIsTooShort() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setPassword("aaaaaaa");
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setPassword("aaaaaaa");
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.password").value("Password must be between 8 and 100 characters"));
@@ -182,10 +182,10 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp400WhenPasswordIsTooLong() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
-        createUserRequest.setPassword("a".repeat(101));
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
+        registerRequest.setPassword("a".repeat(101));
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.password").value("Password must be between 8 and 100 characters"));
@@ -194,36 +194,36 @@ public class RegisterTests {
 
     @Test
     public void shouldReturnHttp409WhenUsernameIsUnavailable() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
 
-        when(authService.register(any(CreateUserRequest.class)))
+        when(authService.register(any(RegisterRequest.class)))
                 .thenThrow(new UsernameAlreadyExistsException("Username already exists"));
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isConflict(),
                 jsonPath("$.error").value("USERNAME_ALREADY_EXISTS"));
     }
 
     @Test
     public void shouldReturnHttp409WhenEmailIsUnavailable() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
 
-        when(authService.register(any(CreateUserRequest.class)))
+        when(authService.register(any(RegisterRequest.class)))
                 .thenThrow(new EmailAlreadyExistsException("Email already exists"));
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isConflict(),
                 jsonPath("$.error").value("EMAIL_ALREADY_EXISTS"));
     }
 
     @Test
     public void shouldReturnHttp201WhenCredentialsAreValid() throws Exception {
-        CreateUserRequest createUserRequest = TestDataUtil.createUserRequest();
+        RegisterRequest registerRequest = TestDataUtil.createUserRequest();
 
-        when(authService.register(any(CreateUserRequest.class)))
+        when(authService.register(any(RegisterRequest.class)))
                 .thenReturn(new AuthResponse("token"));
 
-        performRegister(createUserRequest,
+        performRegister(registerRequest,
                 status().isCreated(),
                 jsonPath("$.token").value("token"));
     }

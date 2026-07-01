@@ -1,13 +1,16 @@
 package com.janwypych.ProjectManagementApi.services;
 
 import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.CreateUserRequest;
+import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
+import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.exceptions.EmailAlreadyExistsException;
+import com.janwypych.ProjectManagementApi.exceptions.InvalidCredentialsException;
 import com.janwypych.ProjectManagementApi.exceptions.UsernameAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.mappers.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.UserRepository;
 import com.janwypych.ProjectManagementApi.security.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +28,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public AuthResponse register(CreateUserRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         if(userRepository.existsByUsername(request.getUsername()))
             throw new UsernameAlreadyExistsException("Username already exists");
 
@@ -38,6 +41,17 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         String token = jwtService.generateToken(savedUser);
+        return userMapper.toResponse(token);
+    }
+
+    public AuthResponse login(LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+
+        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
+            throw new InvalidCredentialsException("Invalid email or password");
+
+        String token = jwtService.generateToken(user);
         return userMapper.toResponse(token);
     }
 }
