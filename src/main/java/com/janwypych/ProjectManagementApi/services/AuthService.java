@@ -9,7 +9,9 @@ import com.janwypych.ProjectManagementApi.mappers.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.UserRepository;
 import com.janwypych.ProjectManagementApi.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -24,13 +26,13 @@ public class AuthService {
     }
 
     public AuthResponse register(CreateUserRequest request) {
-        if(userRepository.existsByUsername(request.username()))
+        if(userRepository.existsByUsername(request.getUsername()))
             throw new UsernameAlreadyExistsException("Username already exists");
 
-        if(userRepository.existsByEmail(request.email()))
+        if(userRepository.existsByEmail(request.getEmail()))
             throw new EmailAlreadyExistsException("Email already exists");
 
-        String hashedPassword = passwordEncoder.encode(request.password());
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
         User user = userMapper.toEntity(request, hashedPassword);
 
         User savedUser = userRepository.save(user);

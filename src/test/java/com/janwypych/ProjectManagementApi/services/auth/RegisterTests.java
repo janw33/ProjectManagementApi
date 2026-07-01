@@ -17,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -50,7 +48,7 @@ class RegisterTests {
 
     @Test
     public void shouldThrowUsernameAlreadyExistsException() {
-        CreateUserRequest request = TestDataUtil.createAccountRequest();
+        CreateUserRequest request = TestDataUtil.createUserRequest();
 
         when(userRepository.existsByUsername(anyString()))
                 .thenReturn(true);
@@ -66,7 +64,7 @@ class RegisterTests {
 
     @Test
     public void shouldThrowEmailAlreadyExistsException() {
-        CreateUserRequest request = TestDataUtil.createAccountRequest();
+        CreateUserRequest request = TestDataUtil.createUserRequest();
 
         when(userRepository.existsByUsername(anyString()))
                 .thenReturn(false);
@@ -85,21 +83,21 @@ class RegisterTests {
 
     @Test
     public void shouldRegisterUserSuccessfully() {
-        CreateUserRequest request = TestDataUtil.createAccountRequest();
+        CreateUserRequest request = TestDataUtil.createUserRequest();
 
-        when(userRepository.existsByUsername(request.username()))
+        when(userRepository.existsByUsername(request.getUsername()))
                 .thenReturn(false);
 
-        when(userRepository.existsByEmail(request.email()))
+        when(userRepository.existsByEmail(request.getEmail()))
                 .thenReturn(false);
 
-        when(passwordEncoder.encode(request.password()))
+        when(passwordEncoder.encode(request.getPassword()))
                 .thenReturn("hashedPassword");
 
         User savedUser = User.builder()
                 .id(1L)
-                .username(request.username())
-                .email(request.email())
+                .username(request.getUsername())
+                .email(request.getEmail())
                 .password("hashedPassword")
                 .build();
 
@@ -112,7 +110,7 @@ class RegisterTests {
         AuthResponse result = authService.register(request);
 
         assertNotNull(result);
-        assertEquals("jwt-token", result.token());
+        assertEquals("jwt-token", result.getToken());
 
         verify(userRepository).save(any(User.class));
         verify(jwtService).generateToken(savedUser);
