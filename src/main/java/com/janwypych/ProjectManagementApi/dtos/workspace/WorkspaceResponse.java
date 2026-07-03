@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateWorkspaceResponse {
+public class WorkspaceResponse {
     private Long id;
     private String name;
     private String description;

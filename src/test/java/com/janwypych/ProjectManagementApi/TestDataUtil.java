@@ -3,7 +3,6 @@ package com.janwypych.ProjectManagementApi;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 
 import java.time.LocalDateTime;

@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.controllers.workspace;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.services.WorkspaceService;
 import org.junit.jupiter.api.Test;
@@ -57,7 +57,7 @@ public class CreateWorkspaceTests {
         String requestJson = objectMapper.writeValueAsString(request);
 
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/workspace/create")
+                MockMvcRequestBuilders.post("/api/v1/workspace")
                         .with(authenticatedUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -67,6 +67,20 @@ public class CreateWorkspaceTests {
             result.andExpect(matcher);
         }
     }
+    @Test
+    public void shouldReturn401WhenUserIsUnauthenticated() throws Exception {
+        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        String requestJson = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/v1/workspace")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestJson))
+                .andExpect(
+                        status().isUnauthorized()
+                );
+    }
+
     @Test
     public void shouldReturnHttp400WhenNameIsNull() throws Exception {
         CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
@@ -133,7 +147,7 @@ public class CreateWorkspaceTests {
     public void shouldReturnHttp201WhenRequestIsValid() throws Exception {
         CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
 
-        CreateWorkspaceResponse response = CreateWorkspaceResponse.builder()
+        WorkspaceResponse response = WorkspaceResponse.builder()
                 .id(1L)
                 .name(request.getName())
                 .description(request.getDescription())

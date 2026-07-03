@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.services.workspace;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
 import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
@@ -62,7 +62,7 @@ public class CreateWorkspaceTests {
         when(workspaceRepository.save(any(Workspace.class)))
                 .thenReturn(savedWorkspace);
 
-        CreateWorkspaceResponse result =
+        WorkspaceResponse result =
                 workspaceService.createWorkspace(currentUser, request);
 
         assertNotNull(result);
