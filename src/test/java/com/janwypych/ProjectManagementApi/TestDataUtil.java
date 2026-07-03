@@ -4,6 +4,7 @@ import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
+import com.janwypych.ProjectManagementApi.entities.Workspace;
 
 import java.time.LocalDateTime;
 
@@ -36,6 +37,15 @@ public final class TestDataUtil {
         return CreateWorkspaceRequest.builder()
                 .name("test")
                 .description("test")
+                .build();
+    }
+
+    public static Workspace workspace() {
+        return Workspace.builder()
+                .id(1L)
+                .name("test")
+                .description("test")
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }
