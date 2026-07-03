@@ -2,6 +2,8 @@ package com.janwypych.ProjectManagementApi;
 
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
+import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,13 @@ public final class TestDataUtil {
         return LoginRequest.builder()
                 .email("test@email.com")
                 .password("testPassword")
+                .build();
+    }
+
+    public static CreateWorkspaceRequest workspaceRequest() {
+        return CreateWorkspaceRequest.builder()
+                .name("test")
+                .description("test")
                 .build();
     }
 }
