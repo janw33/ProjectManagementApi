@@ -1,8 +1,8 @@
 package com.janwypych.ProjectManagementApi.services;
 
-import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
-import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
+import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.exceptions.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.InvalidCredentialsException;
@@ -10,7 +10,6 @@ import com.janwypych.ProjectManagementApi.exceptions.UsernameAlreadyExistsExcept
 import com.janwypych.ProjectManagementApi.mappers.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.UserRepository;
 import com.janwypych.ProjectManagementApi.security.JwtService;
-import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

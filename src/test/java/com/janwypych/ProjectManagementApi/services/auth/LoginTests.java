@@ -1,8 +1,8 @@
 package com.janwypych.ProjectManagementApi.services.auth;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
+import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.exceptions.InvalidCredentialsException;
 import com.janwypych.ProjectManagementApi.mappers.UserMapper;

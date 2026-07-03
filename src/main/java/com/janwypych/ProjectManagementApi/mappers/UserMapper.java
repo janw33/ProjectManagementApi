@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.mappers;
 
-import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
+import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 import org.springframework.stereotype.Component;
 

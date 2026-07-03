@@ -1,8 +1,8 @@
 package com.janwypych.ProjectManagementApi.services.auth;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
+import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.exceptions.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.UsernameAlreadyExistsException;

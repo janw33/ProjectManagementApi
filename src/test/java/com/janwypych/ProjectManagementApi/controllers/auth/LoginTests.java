@@ -1,8 +1,8 @@
 package com.janwypych.ProjectManagementApi.controllers.auth;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
+import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.exceptions.InvalidCredentialsException;
 import com.janwypych.ProjectManagementApi.services.AuthService;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.dtos;
+package com.janwypych.ProjectManagementApi.dtos.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,8 +1,8 @@
 package com.janwypych.ProjectManagementApi.controllers;
 
-import com.janwypych.ProjectManagementApi.dtos.AuthResponse;
-import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
-import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
+import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

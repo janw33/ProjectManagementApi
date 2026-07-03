@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi;
 
-import com.janwypych.ProjectManagementApi.dtos.LoginRequest;
-import com.janwypych.ProjectManagementApi.dtos.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
+import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.entities.User;
 
 import java.time.LocalDateTime;
