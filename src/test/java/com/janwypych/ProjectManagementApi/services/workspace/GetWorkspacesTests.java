@@ -60,7 +60,7 @@ public class GetWorkspacesTests {
         Page<WorkspaceMember> page =
                 new PageImpl<>(List.of(member));
 
-        when(workspaceMemberRepository.findAllByUser(user, Pageable.unpaged()))
+        when(workspaceMemberRepository.findAllByUserOrderByWorkspaceUpdatedAtDesc(user, Pageable.unpaged()))
                 .thenReturn(page);
 
         Page<WorkspaceSummaryResponse> result =
@@ -73,6 +73,6 @@ public class GetWorkspacesTests {
         assertEquals(member.getRole(), result.getContent().getFirst().getRole());
 
 
-        verify(workspaceMemberRepository).findAllByUser(user, Pageable.unpaged());
+        verify(workspaceMemberRepository).findAllByUserOrderByWorkspaceUpdatedAtDesc(user, Pageable.unpaged());
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 public class WorkspaceService {
     private final WorkspaceMapper workspaceMapper;
@@ -44,7 +46,7 @@ public class WorkspaceService {
     }
 
     public Page<WorkspaceSummaryResponse> getWorkspaces(User currentUser, Pageable pageable) {
-        return workspaceMemberRepository.findAllByUser(currentUser, pageable)
+        return workspaceMemberRepository.findAllByUserOrderByWorkspaceUpdatedAtDesc(currentUser, pageable)
                 .map(workspaceMapper::toSummaryResponse);
     }
 
