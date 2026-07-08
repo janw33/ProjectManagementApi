@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.exceptions;
+package com.janwypych.ProjectManagementApi.exceptions.auth;
 
 public class InvalidCredentialsException extends RuntimeException{
     public InvalidCredentialsException(String message) {super(message);}

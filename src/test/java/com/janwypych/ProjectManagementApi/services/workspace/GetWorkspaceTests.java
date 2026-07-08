@@ -6,7 +6,7 @@ import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
 import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
-import com.janwypych.ProjectManagementApi.exceptions.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.WorkspaceMapper;
 import com.janwypych.ProjectManagementApi.repositories.WorkspaceMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.WorkspaceRepository;

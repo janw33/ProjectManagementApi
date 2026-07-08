@@ -1,7 +1,11 @@
 package com.janwypych.ProjectManagementApi.exceptions;
 
+import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
+import com.janwypych.ProjectManagementApi.exceptions.auth.InvalidCredentialsException;
+import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.error.ErrorResponse;
 import com.janwypych.ProjectManagementApi.exceptions.error.ValidationErrorResponse;
+import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

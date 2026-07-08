@@ -4,7 +4,7 @@ import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceIdResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
-import com.janwypych.ProjectManagementApi.exceptions.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.services.WorkspaceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
