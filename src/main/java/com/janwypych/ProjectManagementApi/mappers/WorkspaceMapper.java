@@ -36,6 +36,7 @@ public class WorkspaceMapper {
                 .name(workspace.getName())
                 .description(workspace.getDescription())
                 .createdAt(workspace.getCreatedAt())
+                .updatedAt(workspace.getUpdatedAt())
                 .role(workspaceMember.getRole())
                 .build();
     }

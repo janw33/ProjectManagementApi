@@ -79,6 +79,7 @@ public class GetWorkspaceTests {
         assertEquals(workspace.getName(), result.getName());
         assertEquals(workspace.getDescription(), result.getDescription());
         assertEquals(workspace.getCreatedAt(), result.getCreatedAt());
+        assertEquals(workspace.getUpdatedAt(), result.getUpdatedAt());
         assertEquals(member.getRole(), result.getRole());
 
         verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);

@@ -17,5 +17,6 @@ public class WorkspaceDetailsResponse {
     private String name;
     private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private WorkspaceRole role;
 }

@@ -95,6 +95,7 @@ public class GetWorkspaceTests {
                 jsonPath("$.name").value("test"),
                 jsonPath("$.description").value("test"),
                 jsonPath("$.createdAt").isNotEmpty(),
+                jsonPath("$.updatedAt").isNotEmpty(),
                 jsonPath("$.role").value("OWNER"));
     }
 }

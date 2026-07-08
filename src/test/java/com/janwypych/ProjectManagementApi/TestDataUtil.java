@@ -58,6 +58,7 @@ public final class TestDataUtil {
                 .name("test")
                 .description("test")
                 .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .role(WorkspaceRole.OWNER)
                 .build();
     }
