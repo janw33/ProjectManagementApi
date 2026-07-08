@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.controllers.workspace;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.services.WorkspaceService;
 import org.junit.jupiter.api.Test;
@@ -18,8 +18,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import tools.jackson.databind.ObjectMapper;
-
-import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -147,21 +145,13 @@ public class CreateWorkspaceTests {
     public void shouldReturnHttp201WhenRequestIsValid() throws Exception {
         CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
 
-        WorkspaceResponse response = WorkspaceResponse.builder()
-                .id(1L)
-                .name(request.getName())
-                .description(request.getDescription())
-                .createdAt(LocalDateTime.now())
-                .build();
+        CreateWorkspaceResponse response = new CreateWorkspaceResponse(1L);
 
         when(workspaceService.createWorkspace(any(User.class), any(CreateWorkspaceRequest.class)))
                 .thenReturn(response);
 
         performCreate(request,
                 status().isCreated(),
-                jsonPath("$.id").value(1L),
-                jsonPath("$.name").value(request.getName()),
-                jsonPath("$.description").value(request.getDescription()),
-                jsonPath("$.createdAt").exists());
+                jsonPath("$.id").value(1L));
     }
 }

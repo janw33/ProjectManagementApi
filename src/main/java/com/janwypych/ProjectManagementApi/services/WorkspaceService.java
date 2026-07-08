@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.services;
 
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
+import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
@@ -27,7 +28,7 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public WorkspaceResponse createWorkspace(User currentUser, CreateWorkspaceRequest createWorkspaceRequest) {
+    public CreateWorkspaceResponse createWorkspace(User currentUser, CreateWorkspaceRequest createWorkspaceRequest) {
         Workspace workspace = workspaceMapper.toEntity(createWorkspaceRequest);
 
         Workspace savedWorkspace = workspaceRepository.save(workspace);
@@ -40,7 +41,7 @@ public class WorkspaceService {
 
         workspaceMemberRepository.save(workspaceMember);
 
-        return workspaceMapper.toResponse(savedWorkspace);
+        return workspaceMapper.toCreateResponse(savedWorkspace);
     }
 
     public Page<WorkspaceResponse> getWorkspaces(User currentUser, Pageable pageable) {

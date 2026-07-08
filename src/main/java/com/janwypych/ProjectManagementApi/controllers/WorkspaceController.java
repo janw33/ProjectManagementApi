@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.controllers;
 
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
+import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.services.WorkspaceService;
@@ -22,7 +23,7 @@ public class WorkspaceController {
     }
 
     @PostMapping()
-    public ResponseEntity<WorkspaceResponse> createWorkspace(
+    public ResponseEntity<CreateWorkspaceResponse> createWorkspace(
             @AuthenticationPrincipal User currentUser,
             @RequestBody @Valid CreateWorkspaceRequest createWorkspaceRequest
             ) {
