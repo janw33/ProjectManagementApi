@@ -13,7 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/workspace")
+@RequestMapping("api/v1/workspaces")
 public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
@@ -29,7 +29,7 @@ public class WorkspaceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(workspaceService.createWorkspace(currentUser, createWorkspaceRequest));
     }
 
-    @GetMapping
+    @GetMapping(path = "")
     public ResponseEntity<Page<WorkspaceResponse>> getWorkspaces(
             @AuthenticationPrincipal User currentUser,
             Pageable pageable

@@ -57,7 +57,7 @@ public class CreateWorkspaceTests {
         String requestJson = objectMapper.writeValueAsString(request);
 
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/workspace")
+                MockMvcRequestBuilders.post("/api/v1/workspaces")
                         .with(authenticatedUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -73,7 +73,7 @@ public class CreateWorkspaceTests {
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/workspace")
+                        MockMvcRequestBuilders.post("/api/v1/workspaces")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                 .andExpect(
