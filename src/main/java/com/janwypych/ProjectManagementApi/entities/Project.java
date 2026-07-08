@@ -1,44 +1,41 @@
 package com.janwypych.ProjectManagementApi.entities;
 
-import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "workspace_members",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"workspace_id", "user_id"})
-        }
-)
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "projects")
 @Data
-public class WorkspaceMember {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    @Column(length = 500)
+    private String description;
+
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime joinedAt;
+    private LocalDateTime createdAt;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private WorkspaceRole role;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 }
