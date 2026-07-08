@@ -1,11 +1,10 @@
 package com.janwypych.ProjectManagementApi.services;
 
-import com.janwypych.ProjectManagementApi.dtos.CreateProjectRequest;
-import com.janwypych.ProjectManagementApi.dtos.ProjectIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
 import com.janwypych.ProjectManagementApi.entities.Project;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
-import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.ProjectMapper;
 import com.janwypych.ProjectManagementApi.repositories.ProjectRepository;

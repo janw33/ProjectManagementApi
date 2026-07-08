@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.dtos;
+package com.janwypych.ProjectManagementApi.dtos.Project;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
