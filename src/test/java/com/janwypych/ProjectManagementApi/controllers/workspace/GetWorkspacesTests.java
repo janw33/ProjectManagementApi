@@ -1,9 +1,9 @@
 package com.janwypych.ProjectManagementApi.controllers.workspace;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
+import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import com.janwypych.ProjectManagementApi.services.WorkspaceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,13 +73,12 @@ public class GetWorkspacesTests {
 
     @Test
     public void shouldReturnHttp200() throws Exception {
-        Page<WorkspaceResponse> page =
+        Page<WorkspaceSummaryResponse> page =
                 new PageImpl<>(List.of(
-                        WorkspaceResponse.builder()
+                        WorkspaceSummaryResponse.builder()
                                 .id(1L)
                                 .name("Workspace")
-                                .description("Description")
-                                .createdAt(LocalDateTime.now())
+                                .role(WorkspaceRole.OWNER)
                                 .build()
                 ));
 
@@ -93,6 +90,6 @@ public class GetWorkspacesTests {
                 jsonPath("$.totalElements").value(1),
                 jsonPath("$.content[0].id").value(1),
                 jsonPath("$.content[0].name").value("Workspace"),
-                jsonPath("$.content[0].description").value("Description"));
+                jsonPath("$.content[0].role").value("OWNER"));
     }
 }

@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.services.workspace;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
 import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
@@ -47,7 +47,7 @@ public class GetWorkspacesTests {
     }
 
     @Test
-    public void shouldReturnHttp200() {
+    public void shouldReturnWorkspaceSummaryResponse() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
 
@@ -63,11 +63,15 @@ public class GetWorkspacesTests {
         when(workspaceMemberRepository.findAllByUser(user, Pageable.unpaged()))
                 .thenReturn(page);
 
-        Page<WorkspaceResponse> result =
+        Page<WorkspaceSummaryResponse> result =
                 workspaceService.getWorkspaces(user, Pageable.unpaged());
 
         assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getContent().size());
+        assertEquals(workspace.getId(), result.getContent().getFirst().getId());
         assertEquals(workspace.getName(), result.getContent().getFirst().getName());
+        assertEquals(member.getRole(), result.getContent().getFirst().getRole());
+
 
         verify(workspaceMemberRepository).findAllByUser(user, Pageable.unpaged());
     }
