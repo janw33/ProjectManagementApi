@@ -67,7 +67,7 @@ public class CreateWorkspaceTests {
     }
     @Test
     public void shouldReturn401WhenUserIsUnauthenticated() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
@@ -81,7 +81,7 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsNull() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
         request.setName(null);
         performCreate(request,
                 status().isBadRequest(),
@@ -92,7 +92,7 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsBlank() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
         request.setName("   ");
         performCreate(request,
                 status().isBadRequest(),
@@ -102,7 +102,7 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsTooShort() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
         request.setName("a");
         performCreate(request,
                 status().isBadRequest(),
@@ -112,7 +112,7 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsTooLong() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
         request.setName("a".repeat(101));
         performCreate(request,
                 status().isBadRequest(),
@@ -123,7 +123,7 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenDescriptionIsTooLong() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
         request.setDescription("a".repeat(501));
         performCreate(request,
                 status().isBadRequest(),
@@ -133,7 +133,7 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenDescriptionContainsOnlyWhitespace() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
         request.setDescription("    ");
         performCreate(request,
                 status().isBadRequest(),
@@ -143,7 +143,7 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp201WhenRequestIsValid() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
 
         WorkspaceIdResponse response = new WorkspaceIdResponse(1L);
 

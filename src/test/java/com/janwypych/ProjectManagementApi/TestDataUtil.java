@@ -3,6 +3,7 @@ package com.janwypych.ProjectManagementApi;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
+import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
@@ -35,7 +36,7 @@ public final class TestDataUtil {
                 .build();
     }
 
-    public static CreateWorkspaceRequest workspaceRequest() {
+    public static CreateWorkspaceRequest createWorkspaceRequest() {
         return CreateWorkspaceRequest.builder()
                 .name("test")
                 .description("test")
@@ -58,6 +59,13 @@ public final class TestDataUtil {
                 .description("test")
                 .createdAt(LocalDateTime.now())
                 .role(WorkspaceRole.OWNER)
+                .build();
+    }
+
+    public static UpdateWorkspaceRequest updateWorkspaceRequest() {
+        return UpdateWorkspaceRequest.builder()
+                .name("test1")
+                .description("test1")
                 .build();
     }
 }

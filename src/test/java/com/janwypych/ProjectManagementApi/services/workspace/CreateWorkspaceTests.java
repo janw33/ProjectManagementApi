@@ -48,9 +48,9 @@ public class CreateWorkspaceTests {
     }
 
     @Test
-    public void shouldReturnCreateWorkspaceResponse() {
+    public void shouldReturnWorkspaceIdResponse() {
         User currentUser = TestDataUtil.user();
-        CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
+        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
 
         Workspace savedWorkspace = Workspace.builder()
                 .id(1L)
