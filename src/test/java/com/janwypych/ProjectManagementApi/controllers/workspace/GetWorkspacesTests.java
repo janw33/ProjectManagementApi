@@ -63,7 +63,7 @@ public class GetWorkspacesTests {
         }
     }
     @Test
-    public void shouldReturn401WhenUserIsUnauthenticated() throws Exception {
+    public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/api/v1/workspaces"))
                 .andExpect(

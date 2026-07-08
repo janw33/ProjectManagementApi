@@ -3,8 +3,10 @@ package com.janwypych.ProjectManagementApi;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
+import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
+import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +24,7 @@ public final class TestDataUtil {
                 .username("test")
                 .email("test@email.com")
                 .password("testPassword")
-                .createdAt(LocalDateTime.of(1, 1, 1, 1, 1, 1, 1))
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
@@ -46,6 +48,16 @@ public final class TestDataUtil {
                 .name("test")
                 .description("test")
                 .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static WorkspaceDetailsResponse workspaceDetailsResponse() {
+        return WorkspaceDetailsResponse.builder()
+                .id(1L)
+                .name("test")
+                .description("test")
+                .createdAt(LocalDateTime.now())
+                .role(WorkspaceRole.OWNER)
                 .build();
     }
 }

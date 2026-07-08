@@ -41,7 +41,7 @@ public class WorkspaceController {
         );
     }
 
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<WorkspaceDetailsResponse> getWorkspace(
             @AuthenticationPrincipal User currentUser,
             @PathVariable("id") Long id
