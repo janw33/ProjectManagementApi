@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.controllers.workspace;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceIdResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.services.WorkspaceService;
 import org.junit.jupiter.api.Test;
@@ -145,7 +145,7 @@ public class CreateWorkspaceTests {
     public void shouldReturnHttp201WhenRequestIsValid() throws Exception {
         CreateWorkspaceRequest request = TestDataUtil.workspaceRequest();
 
-        CreateWorkspaceResponse response = new CreateWorkspaceResponse(1L);
+        WorkspaceIdResponse response = new WorkspaceIdResponse(1L);
 
         when(workspaceService.createWorkspace(any(User.class), any(CreateWorkspaceRequest.class)))
                 .thenReturn(response);

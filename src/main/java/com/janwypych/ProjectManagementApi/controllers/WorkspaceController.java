@@ -1,9 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers;
 
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.*;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.services.WorkspaceService;
 import jakarta.validation.Valid;
@@ -24,7 +21,7 @@ public class WorkspaceController {
     }
 
     @PostMapping()
-    public ResponseEntity<CreateWorkspaceResponse> createWorkspace(
+    public ResponseEntity<WorkspaceIdResponse> createWorkspace(
             @AuthenticationPrincipal User currentUser,
             @RequestBody @Valid CreateWorkspaceRequest createWorkspaceRequest
             ) {
@@ -41,11 +38,20 @@ public class WorkspaceController {
         );
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{workspaceId}")
     public ResponseEntity<WorkspaceDetailsResponse> getWorkspace(
             @AuthenticationPrincipal User currentUser,
-            @PathVariable("id") Long id
+            @PathVariable("workspaceId") Long workspaceId
     ) {
-        return ResponseEntity.ok(workspaceService.getWorkspace(currentUser, id));
+        return ResponseEntity.ok(workspaceService.getWorkspace(currentUser, workspaceId));
+    }
+
+    @PatchMapping(path = "/{workspaceId}")
+    public ResponseEntity<WorkspaceIdResponse> updateWorkspace (
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody @Valid UpdateWorkspaceRequest updateWorkspaceRequest,
+            @PathVariable("workspaceId") Long workspaceId
+    ) {
+        return ResponseEntity.ok(workspaceService.updateWorkspace(currentUser, updateWorkspaceRequest, workspaceId));
     }
 }

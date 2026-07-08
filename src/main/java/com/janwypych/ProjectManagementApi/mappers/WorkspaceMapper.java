@@ -1,9 +1,6 @@
 package com.janwypych.ProjectManagementApi.mappers;
 
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.*;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
 import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
 import org.springframework.stereotype.Component;
@@ -17,8 +14,8 @@ public class WorkspaceMapper {
                 .build();
     }
 
-    public CreateWorkspaceResponse toCreateResponse(Workspace workspace) {
-        return new CreateWorkspaceResponse(workspace.getId());
+    public WorkspaceIdResponse toIdResponse(Workspace workspace) {
+        return new WorkspaceIdResponse(workspace.getId());
     }
 
     public WorkspaceSummaryResponse toSummaryResponse(WorkspaceMember workspaceMember) {

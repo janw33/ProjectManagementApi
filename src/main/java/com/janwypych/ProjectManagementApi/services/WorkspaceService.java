@@ -1,9 +1,6 @@
 package com.janwypych.ProjectManagementApi.services;
 
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceResponse;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspace.*;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
 import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
@@ -16,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class WorkspaceService {
@@ -32,7 +27,7 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public CreateWorkspaceResponse createWorkspace(User currentUser, CreateWorkspaceRequest createWorkspaceRequest) {
+    public WorkspaceIdResponse createWorkspace(User currentUser, CreateWorkspaceRequest createWorkspaceRequest) {
         Workspace workspace = workspaceMapper.toEntity(createWorkspaceRequest);
 
         Workspace savedWorkspace = workspaceRepository.save(workspace);
@@ -45,7 +40,7 @@ public class WorkspaceService {
 
         workspaceMemberRepository.save(workspaceMember);
 
-        return workspaceMapper.toCreateResponse(savedWorkspace);
+        return workspaceMapper.toIdResponse(savedWorkspace);
     }
 
     public Page<WorkspaceSummaryResponse> getWorkspaces(User currentUser, Pageable pageable) {
@@ -58,5 +53,18 @@ public class WorkspaceService {
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
 
         return workspaceMapper.toDetailsResponse(member);
+    }
+
+    @Transactional
+    public WorkspaceIdResponse updateWorkspace(User currentUser, UpdateWorkspaceRequest updateWorkspaceRequest, Long workspaceId) {
+        WorkspaceMember member = workspaceMemberRepository.findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        workspace.setName(updateWorkspaceRequest.getName());
+        workspace.setDescription(updateWorkspaceRequest.getDescription());
+
+        return workspaceMapper.toIdResponse(workspace);
     }
 }

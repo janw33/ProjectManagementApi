@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateWorkspaceResponse {
+public class WorkspaceIdResponse {
     private Long id;
 }
