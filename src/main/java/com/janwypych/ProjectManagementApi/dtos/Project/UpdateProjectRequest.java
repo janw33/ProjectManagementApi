@@ -13,8 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UpdateProjectRequest {
-    @NotBlank(message = "Name cannot be blank")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @Pattern(
+            regexp = "^(?!\\s+$).*$",
+            message = "Name cannot contain only whitespace"
+    )
     private String name;
 
     @Size(max = 500, message = "Description must be at most 500 characters long")

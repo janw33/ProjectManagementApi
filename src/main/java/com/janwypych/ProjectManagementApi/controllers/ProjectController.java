@@ -1,9 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers;
 
-import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.*;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.services.ProjectService;
 import jakarta.validation.Valid;
@@ -50,12 +47,13 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProject(currentUser, workspaceId, projectId));
     }
 
-//    @PostMapping
-//    public ResponseEntity<ProjectIdResponse> updateProject(
-//            @AuthenticationPrincipal User currentUser,
-//            @RequestBody
-//            @PathVariable("workspaceId") Long workspaceId
-//    ) {
-//        //return ResponseEntity.ok(projectService.updateProject(currentUser, workspaceId);
-//    }
+    @PatchMapping(path = "/{projectId}")
+    public ResponseEntity<ProjectIdResponse> updateProject(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody @Valid UpdateProjectRequest request,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId
+    ) {
+        return ResponseEntity.ok(projectService.updateProject(currentUser, request, workspaceId, projectId));
+    }
 }

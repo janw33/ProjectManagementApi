@@ -1,9 +1,6 @@
 package com.janwypych.ProjectManagementApi.services;
 
-import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.*;
 import com.janwypych.ProjectManagementApi.entities.*;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
@@ -12,9 +9,11 @@ import com.janwypych.ProjectManagementApi.mappers.ProjectMapper;
 import com.janwypych.ProjectManagementApi.repositories.ProjectMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.ProjectRepository;
 import com.janwypych.ProjectManagementApi.repositories.WorkspaceMemberRepository;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,5 +85,25 @@ public class ProjectService {
                 .orElseThrow(ProjectNotFoundException::new);
 
         return projectMapper.toDetailsResponse(project);
+    }
+
+    @Transactional
+    public ProjectIdResponse updateProject(User currentUser, UpdateProjectRequest request, Long workspaceId, Long projectId) {
+        WorkspaceMember member = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        if(request.getName() != null) {
+            project.setName(request.getName()); }
+
+        if(request.getDescription() != null) {
+            project.setDescription(request.getDescription()); }
+
+        return projectMapper.toIdResponse(project);
     }
 }
