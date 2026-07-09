@@ -81,7 +81,7 @@ public class GetProjectsTests {
 
         Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project()));
 
-        when(projectRepository.findAllByWorkspace(workspace, Pageable.unpaged()))
+        when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
 
         when(projectMemberRepository.findAllByUserAndProject_Workspace(user, workspace))
@@ -112,7 +112,7 @@ public class GetProjectsTests {
 
         Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project()));
 
-        when(projectRepository.findAllByWorkspace(workspace, Pageable.unpaged()))
+        when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
 
         when(projectMemberRepository.findAllByUserAndProject_Workspace(user, workspace))
@@ -142,7 +142,7 @@ public class GetProjectsTests {
 
         Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project()));
 
-        when(projectRepository.findAllByWorkspace(workspace, Pageable.unpaged()))
+        when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
 
         when(projectMemberRepository.findAllByUserAndProject_Workspace(user, workspace))
@@ -174,7 +174,7 @@ public class GetProjectsTests {
 
         Page<Project> projects = new PageImpl<>(List.of(project));
 
-        when(projectRepository.findAllByWorkspace(workspace, Pageable.unpaged()))
+        when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
 
         ProjectMember projectMember = ProjectMember.builder()

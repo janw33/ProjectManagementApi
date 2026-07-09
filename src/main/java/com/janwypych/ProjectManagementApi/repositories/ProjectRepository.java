@@ -7,6 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Page<Project> findAllByWorkspace(Workspace workspace, Pageable pageable);}
+    Page<Project> findAllByWorkspaceOrderByUpdatedAtDesc(Workspace workspace, Pageable pageable);
+    Optional<Project> findByIdAndWorkspace(Long id, Workspace workspace);
+}

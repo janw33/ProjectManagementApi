@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.mappers;
 
 import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.Project;
@@ -26,6 +27,16 @@ public class ProjectMapper {
                 .id(project.getId())
                 .name(project.getName())
                 .hasAccess(hasAccess)
+                .build();
+    }
+
+    public ProjectDetailsResponse toDetailsResponse(Project project) {
+        return ProjectDetailsResponse.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .description(project.getDescription())
+                .createdAt(project.getCreatedAt())
+                .updatedAt(project.getUpdatedAt())
                 .build();
     }
 }

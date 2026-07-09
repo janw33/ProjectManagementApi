@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.controllers;
 
 import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.User;
@@ -38,5 +39,14 @@ public class ProjectController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(projectService.getProjects(currentUser, workspaceId, pageable));
+    }
+
+    @GetMapping(path = "/{projectId}")
+    public ResponseEntity<ProjectDetailsResponse> getProject(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId
+    ) {
+        return ResponseEntity.ok(projectService.getProject(currentUser, workspaceId, projectId));
     }
 }

@@ -1,10 +1,12 @@
 package com.janwypych.ProjectManagementApi.services;
 
 import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.*;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
+import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.ProjectMapper;
 import com.janwypych.ProjectManagementApi.repositories.ProjectMemberRepository;
@@ -14,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class ProjectService {
         Workspace workspace = member.getWorkspace();
 
         Page<Project> projects = projectRepository
-                .findAllByWorkspace(workspace, pageable);
+                .findAllByWorkspaceOrderByUpdatedAtDesc(workspace, pageable);
 
         boolean hasGlobalAccess =
                 member.getRole() == WorkspaceRole.OWNER
@@ -72,5 +73,18 @@ public class ProjectService {
 
             return projectMapper.toSummaryResponse(project, hasAccess);
         });
+    }
+
+    public ProjectDetailsResponse getProject(User currentUser, Long workspaceId, Long projectId) {
+        WorkspaceMember member = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        return projectMapper.toDetailsResponse(project);
     }
 }
