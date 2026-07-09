@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi.mappers;
 
 import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.Project;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,13 @@ public class ProjectMapper {
 
     public ProjectIdResponse toIdResponse(Project project) {
         return new ProjectIdResponse(project.getId());
+    }
+
+    public ProjectSummaryResponse toSummaryResponse(Project project, boolean hasAccess) {
+        return ProjectSummaryResponse.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .hasAccess(hasAccess)
+                .build();
     }
 }
