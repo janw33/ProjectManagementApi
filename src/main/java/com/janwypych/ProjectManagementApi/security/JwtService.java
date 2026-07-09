@@ -1,6 +1,6 @@
 package com.janwypych.ProjectManagementApi.security;
 
-import com.janwypych.ProjectManagementApi.entities.User;
+import com.janwypych.ProjectManagementApi.entities.user.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

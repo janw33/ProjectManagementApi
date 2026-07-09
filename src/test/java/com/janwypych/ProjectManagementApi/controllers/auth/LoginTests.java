@@ -4,7 +4,7 @@ import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.exceptions.auth.InvalidCredentialsException;
-import com.janwypych.ProjectManagementApi.services.AuthService;
+import com.janwypych.ProjectManagementApi.services.auth.AuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,10 +1,11 @@
-package com.janwypych.ProjectManagementApi.controllers.workspace;
+package com.janwypych.ProjectManagementApi.controllers.project;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
-import com.janwypych.ProjectManagementApi.services.workspace.WorkspaceService;
+import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.services.project.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import tools.jackson.databind.ObjectMapper;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CreateWorkspaceTests {
+public class CreateProjectTests {
     @Autowired
     private MockMvc mockMvc;
 
@@ -35,7 +37,7 @@ public class CreateWorkspaceTests {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private WorkspaceService workspaceService;
+    private ProjectService projectService;
 
     private Authentication createAuthentication() {
         User user = TestDataUtil.user();
@@ -51,11 +53,11 @@ public class CreateWorkspaceTests {
         return authentication(createAuthentication());
     }
 
-    private void performCreate(CreateWorkspaceRequest request, ResultMatcher... matchers) throws Exception {
+    private void performCreate(Long workspaceId ,CreateProjectRequest request, ResultMatcher... matchers) throws Exception {
         String requestJson = objectMapper.writeValueAsString(request);
 
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/workspaces")
+                MockMvcRequestBuilders.post("/api/v1/workspaces/{workspaceId}/projects", workspaceId)
                         .with(authenticatedUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -65,13 +67,14 @@ public class CreateWorkspaceTests {
             result.andExpect(matcher);
         }
     }
+
     @Test
-    public void shouldReturn401WhenUserIsUnauthenticated() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
+    public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/workspaces")
+                        MockMvcRequestBuilders.post("/api/v1/workspaces/1/projects")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                 .andExpect(
@@ -81,20 +84,23 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsNull() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
         request.setName(null);
-        performCreate(request,
+        performCreate(workspaceId,
+                request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.name").value("Name cannot be blank"));
     }
 
-
     @Test
     public void shouldReturnHttp400WhenNameIsBlank() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
-        request.setName("   ");
-        performCreate(request,
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
+        request.setName("     ");
+        performCreate(workspaceId,
+                request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.name").value("Name cannot be blank"));
@@ -102,9 +108,11 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsTooShort() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
         request.setName("a");
-        performCreate(request,
+        performCreate(workspaceId,
+                request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.name").value("Name must be between 2 and 100 characters"));
@@ -112,45 +120,65 @@ public class CreateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsTooLong() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
         request.setName("a".repeat(101));
-        performCreate(request,
+        performCreate(workspaceId,
+                request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.name").value("Name must be between 2 and 100 characters"));
     }
 
-
     @Test
-    public void shouldReturnHttp400WhenDescriptionIsTooLong() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
-        request.setDescription("a".repeat(501));
-        performCreate(request,
-                status().isBadRequest(),
-                jsonPath("$.error").value("VALIDATION_ERROR"),
-                jsonPath("$.validationErrors.description").value("Description must be at most 500 characters long"));
-    }
-
-    @Test
-    public void shouldReturnHttp400WhenDescriptionContainsOnlyWhitespace() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
+    public void shouldReturnHttp400WhenDescriptionContainsOnlyWhitespaces() throws Exception {
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
         request.setDescription("    ");
-        performCreate(request,
+        performCreate(workspaceId,
+                request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.description").value("Description cannot contain only whitespace"));
     }
 
     @Test
+    public void shouldReturnHttp400WhenDescriptionIsTooLong() throws Exception {
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
+        request.setDescription("a".repeat(501));
+        performCreate(workspaceId,
+                request,
+                status().isBadRequest(),
+                jsonPath("$.error").value("VALIDATION_ERROR"),
+                jsonPath("$.validationErrors.description").value("Description must be at most 500 characters long"));
+    }
+
+    @Test
+    public void shouldReturnHttp404WhenWorkspaceIsNotFound() throws Exception {
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
+
+        when(projectService.createProject(any(User.class), eq(request), eq(workspaceId)))
+                .thenThrow(new WorkspaceNotFoundException("Workspace not found"));
+
+        performCreate(workspaceId,
+                request,
+                status().isNotFound(),
+                jsonPath("$.error").value("WORKSPACE_NOT_FOUND"),
+                jsonPath("$.message").value("Workspace not found"));
+    }
+
+    @Test
     public void shouldReturnHttp201WhenRequestIsValid() throws Exception {
-        CreateWorkspaceRequest request = TestDataUtil.createWorkspaceRequest();
+        CreateProjectRequest request = TestDataUtil.createProjectRequest();
+        Long workspaceId = 1L;
 
-        WorkspaceIdResponse response = new WorkspaceIdResponse(1L);
+        when(projectService.createProject(any(User.class), eq(request), eq(workspaceId)))
+                .thenReturn(new ProjectIdResponse(1L));
 
-        when(workspaceService.createWorkspace(any(User.class), any(CreateWorkspaceRequest.class)))
-                .thenReturn(response);
-
-        performCreate(request,
+        performCreate(workspaceId,
+                request,
                 status().isCreated(),
                 jsonPath("$.id").value(1L));
     }

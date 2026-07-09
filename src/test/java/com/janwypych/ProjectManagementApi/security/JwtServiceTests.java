@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.security;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.entities.User;
+import com.janwypych.ProjectManagementApi.entities.user.User;
 import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

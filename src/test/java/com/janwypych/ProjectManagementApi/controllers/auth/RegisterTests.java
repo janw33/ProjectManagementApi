@@ -5,7 +5,7 @@ import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsException;
-import com.janwypych.ProjectManagementApi.services.AuthService;
+import com.janwypych.ProjectManagementApi.services.auth.AuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

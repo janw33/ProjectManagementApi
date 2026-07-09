@@ -1,17 +1,16 @@
 package com.janwypych.ProjectManagementApi;
 
 import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.dtos.Project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
-import com.janwypych.ProjectManagementApi.entities.Project;
-import com.janwypych.ProjectManagementApi.entities.User;
-import com.janwypych.ProjectManagementApi.entities.Workspace;
-import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
+import com.janwypych.ProjectManagementApi.entities.project.Project;
+import com.janwypych.ProjectManagementApi.entities.user.User;
+import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
+import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.security;
 
-import com.janwypych.ProjectManagementApi.entities.User;
-import com.janwypych.ProjectManagementApi.repositories.UserRepository;
+import com.janwypych.ProjectManagementApi.entities.user.User;
+import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

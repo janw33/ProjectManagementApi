@@ -1,15 +1,14 @@
-package com.janwypych.ProjectManagementApi.controllers.workspace;
+package com.janwypych.ProjectManagementApi.controllers.project;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
-import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
-import com.janwypych.ProjectManagementApi.services.workspace.WorkspaceService;
+import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.services.project.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +22,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,12 +30,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GetWorkspacesTests {
+public class GetProjectsTests {
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private WorkspaceService workspaceService;
+    private ProjectService projectService;
 
     private Authentication createAuthentication() {
         User user = TestDataUtil.user();
@@ -51,9 +51,9 @@ public class GetWorkspacesTests {
         return authentication(createAuthentication());
     }
 
-    private void performGet(ResultMatcher... matchers) throws Exception {
+    private void performGet(Long workspaceId, ResultMatcher... matchers) throws Exception {
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/workspaces")
+                MockMvcRequestBuilders.get("/api/v1/workspaces/{workspaceId}/projects", workspaceId)
                         .with(authenticatedUser())
         );
 
@@ -61,34 +61,48 @@ public class GetWorkspacesTests {
             result.andExpect(matcher);
         }
     }
+
     @Test
     public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/api/v1/workspaces"))
+                        MockMvcRequestBuilders.get("/api/v1/workspaces/1/projects"))
                 .andExpect(
                         status().isUnauthorized()
                 );
     }
 
     @Test
-    public void shouldReturnHttp200() throws Exception {
-        Page<WorkspaceSummaryResponse> page =
-                new PageImpl<>(List.of(
-                        WorkspaceSummaryResponse.builder()
-                                .id(1L)
-                                .name("Workspace")
-                                .role(WorkspaceRole.OWNER)
-                                .build()
-                ));
+    public void shouldReturnHttp404WhenWorkspaceIsNotFound() throws Exception {
+        Long workspaceId = 1L;
 
-        when(workspaceService.getWorkspaces(any(User.class), any(Pageable.class)))
-                .thenReturn(page);
+        when(projectService.getProjects(any(User.class), eq(workspaceId), any(Pageable.class)))
+                .thenThrow(new WorkspaceNotFoundException("Workspace Not Found"));
 
-        performGet(status().isOk(),
+        performGet(workspaceId,
+                status().isNotFound(),
+                jsonPath("$.error").value("WORKSPACE_NOT_FOUND"),
+                jsonPath("$.message").value("Workspace Not Found"));
+    }
+
+    @Test
+    public void shouldReturnHttp200WhenWorkspaceIsFound() throws Exception {
+        Long workspaceId = 1L;
+
+        ProjectSummaryResponse projectSummaryResponse = ProjectSummaryResponse.builder()
+                .id(1L)
+                .name("test")
+                .hasAccess(true)
+                .build();
+
+        when(projectService.getProjects(any(User.class), eq(workspaceId), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(projectSummaryResponse)));
+
+        performGet(workspaceId,
+                status().isOk(),
                 jsonPath("$.content").isArray(),
                 jsonPath("$.totalElements").value(1),
                 jsonPath("$.content[0].id").value(1),
-                jsonPath("$.content[0].name").value("Workspace"),
-                jsonPath("$.content[0].role").value("OWNER"));
+                jsonPath("$.content[0].name").value("test"),
+                jsonPath("$.content[0].hasAccess").value(true));
     }
 }

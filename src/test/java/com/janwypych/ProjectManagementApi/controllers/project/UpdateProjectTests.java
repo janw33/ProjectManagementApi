@@ -1,11 +1,12 @@
-package com.janwypych.ProjectManagementApi.controllers.workspace;
+package com.janwypych.ProjectManagementApi.controllers.project;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
+import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
-import com.janwypych.ProjectManagementApi.services.workspace.WorkspaceService;
+import com.janwypych.ProjectManagementApi.services.project.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UpdateWorkspaceTests {
+public class UpdateProjectTests {
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,7 +38,7 @@ public class UpdateWorkspaceTests {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private WorkspaceService workspaceService;
+    private ProjectService projectService;
 
     private Authentication createAuthentication() {
         User user = TestDataUtil.user();
@@ -53,11 +54,11 @@ public class UpdateWorkspaceTests {
         return authentication(createAuthentication());
     }
 
-    private void performUpdate(Long workspaceId, UpdateWorkspaceRequest request, ResultMatcher... matchers) throws Exception {
+    private void performUpdate(Long workspaceId, Long projectId, UpdateProjectRequest request, ResultMatcher... matchers) throws Exception {
         String requestJson = objectMapper.writeValueAsString(request);
 
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/api/v1/workspaces/{workspaceId}", workspaceId)
+                MockMvcRequestBuilders.patch("/api/v1/workspaces/{workspaceId}/projects/{projectId}", workspaceId, projectId)
                         .with(authenticatedUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -70,11 +71,11 @@ public class UpdateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.patch("/api/v1/workspaces/1")
+                        MockMvcRequestBuilders.patch("/api/v1/workspaces/1/projects/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                 .andExpect(
@@ -83,23 +84,15 @@ public class UpdateWorkspaceTests {
     }
 
     @Test
-    public void shouldReturnHttp400WhenNameIsOnlyWhitespaces() throws Exception {
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
-        Long workspaceId = 1L;
-        request.setName("    ");
-        performUpdate(workspaceId,
-                request,
-                status().isBadRequest(),
-                jsonPath("$.error").value("VALIDATION_ERROR"),
-                jsonPath("$.validationErrors.name").value("Name cannot contain only whitespace"));
-    }
-
-    @Test
     public void shouldReturnHttp400WhenNameIsTooShort() throws Exception {
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
         Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
         request.setName("a");
+
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
@@ -108,23 +101,46 @@ public class UpdateWorkspaceTests {
 
     @Test
     public void shouldReturnHttp400WhenNameIsTooLong() throws Exception {
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
         Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
         request.setName("a".repeat(101));
+
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
                 jsonPath("$.validationErrors.name").value("Name must be between 2 and 100 characters"));
     }
 
+    @Test
+    public void shouldReturnHttp400WhenNameContainsOnlyWhitespaces() throws Exception {
+        Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
+        request.setName("   ");
+
+        performUpdate(workspaceId,
+                projectId,
+                request,
+                status().isBadRequest(),
+                jsonPath("$.error").value("VALIDATION_ERROR"),
+                jsonPath("$.validationErrors.name").value("Name cannot contain only whitespace"));
+    }
 
     @Test
     public void shouldReturnHttp400WhenDescriptionIsTooLong() throws Exception {
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
         Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
         request.setDescription("a".repeat(501));
+
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
@@ -132,11 +148,15 @@ public class UpdateWorkspaceTests {
     }
 
     @Test
-    public void shouldReturnHttp400WhenDescriptionContainsOnlyWhitespace() throws Exception {
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+    public void shouldReturnHttp400WhenDescriptionContainsOnlyWhitespaces() throws Exception {
         Long workspaceId = 1L;
-        request.setDescription("     ");
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
+        request.setDescription("   ");
+
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
@@ -144,14 +164,17 @@ public class UpdateWorkspaceTests {
     }
 
     @Test
-    public void shouldReturn404WhenWorkspaceIsNotFound() throws Exception{
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+    public void shouldReturnHttp404WhenWorkspaceIsNotFound() throws Exception {
         Long workspaceId = 1L;
+        Long projectId = 1L;
 
-        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
+
+        when(projectService.updateProject(any(User.class), eq(request), eq(workspaceId), eq(projectId)))
                 .thenThrow(new WorkspaceNotFoundException("Workspace not found"));
 
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isNotFound(),
                 jsonPath("$.error").value("WORKSPACE_NOT_FOUND"),
@@ -159,64 +182,98 @@ public class UpdateWorkspaceTests {
     }
 
     @Test
-    public void shouldReturnHttp200WhenRequestIsValid() throws Exception{
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+    public void shouldReturnHttp404WhenProjectIsNotFound() throws Exception {
         Long workspaceId = 1L;
-        WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
+        Long projectId = 1L;
 
-        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
-                .thenReturn(workspaceIdResponse);
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
+
+        when(projectService.updateProject(any(User.class), eq(request), eq(workspaceId), eq(projectId)))
+                .thenThrow(new ProjectNotFoundException());
 
         performUpdate(workspaceId,
+                projectId,
+                request,
+                status().isNotFound(),
+                jsonPath("$.error").value("PROJECT_NOT_FOUND"),
+                jsonPath("$.message").value("Project not found"));
+    }
+
+    @Test
+    public void shouldReturnHttp200WhenProjectIsFound() throws Exception {
+        Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
+
+        ProjectIdResponse projectIdResponse = new ProjectIdResponse(1L);
+
+        when(projectService.updateProject(any(User.class), eq(request), eq(workspaceId), eq(projectId)))
+                .thenReturn(projectIdResponse);
+
+        performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isOk(),
                 jsonPath("$.id").value(1L));
     }
 
     @Test
-    public void shouldReturnHttp200WhenNameIsNull() throws Exception{
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+    public void shouldReturnHttp200WhenNameIsNull() throws Exception {
+        Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
         request.setName(null);
-        Long workspaceId = 1L;
-        WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
 
-        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
-                .thenReturn(workspaceIdResponse);
+        ProjectIdResponse projectIdResponse = new ProjectIdResponse(1L);
+
+        when(projectService.updateProject(any(User.class), eq(request), eq(workspaceId), eq(projectId)))
+                .thenReturn(projectIdResponse);
 
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isOk(),
                 jsonPath("$.id").value(1L));
     }
 
     @Test
-    public void shouldReturnHttp200WhenDescriptionIsNull() throws Exception{
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+    public void shouldReturnHttp200WhenDescriptionIsNull() throws Exception {
+        Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
         request.setDescription(null);
-        Long workspaceId = 1L;
-        WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
 
-        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
-                .thenReturn(workspaceIdResponse);
+        ProjectIdResponse projectIdResponse = new ProjectIdResponse(1L);
+
+        when(projectService.updateProject(any(User.class), eq(request), eq(workspaceId), eq(projectId)))
+                .thenReturn(projectIdResponse);
 
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isOk(),
                 jsonPath("$.id").value(1L));
     }
 
     @Test
-    public void shouldReturnHttp200WhenDescriptionAndNameAreNull() throws Exception{
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+    public void shouldReturnHttp200WhenNameAndDescriptionAreNull() throws Exception {
+        Long workspaceId = 1L;
+        Long projectId = 1L;
+
+        UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
         request.setName(null);
         request.setDescription(null);
-        Long workspaceId = 1L;
-        WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
 
-        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
-                .thenReturn(workspaceIdResponse);
+        ProjectIdResponse projectIdResponse = new ProjectIdResponse(1L);
+
+        when(projectService.updateProject(any(User.class), eq(request), eq(workspaceId), eq(projectId)))
+                .thenReturn(projectIdResponse);
 
         performUpdate(workspaceId,
+                projectId,
                 request,
                 status().isOk(),
                 jsonPath("$.id").value(1L));
