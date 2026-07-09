@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi.services;
 
 import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.Project;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
@@ -9,6 +10,8 @@ import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFound
 import com.janwypych.ProjectManagementApi.mappers.ProjectMapper;
 import com.janwypych.ProjectManagementApi.repositories.ProjectRepository;
 import com.janwypych.ProjectManagementApi.repositories.WorkspaceMemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,5 +37,13 @@ public class ProjectService {
         project = projectRepository.save(project);
 
         return projectMapper.toIdResponse(project);
+    }
+
+    public Page<ProjectSummaryResponse> getProjects(User currentUser, Long workspaceId, Pageable pageable) {
+        Workspace workspace = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"))
+                .getWorkspace();
+
     }
 }
