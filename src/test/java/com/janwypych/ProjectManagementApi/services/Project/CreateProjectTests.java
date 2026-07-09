@@ -10,6 +10,7 @@ import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.ProjectMapper;
+import com.janwypych.ProjectManagementApi.repositories.ProjectMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.ProjectRepository;
 import com.janwypych.ProjectManagementApi.repositories.WorkspaceMemberRepository;
 import com.janwypych.ProjectManagementApi.services.ProjectService;
@@ -20,7 +21,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +35,9 @@ public class CreateProjectTests {
     private ProjectRepository projectRepository;
 
     @Mock
+    private ProjectMemberRepository projectMemberRepository;
+
+    @Mock
     private WorkspaceMemberRepository workspaceMemberRepository;
 
     private ProjectService projectService;
@@ -43,6 +46,7 @@ public class CreateProjectTests {
     void setUp() {
         projectService = new ProjectService(
                 workspaceMemberRepository,
+                projectMemberRepository,
                 projectRepository,
                 projectMapper
         );
