@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi;
 
 import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.Project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
@@ -96,6 +97,13 @@ public final class TestDataUtil {
                 .user(user)
                 .workspace(workspace)
                 .role(WorkspaceRole.OWNER)
+                .build();
+    }
+
+    public static UpdateProjectRequest updateProjectRequest() {
+        return UpdateProjectRequest.builder()
+                .name("test1")
+                .description("test1")
                 .build();
     }
 }

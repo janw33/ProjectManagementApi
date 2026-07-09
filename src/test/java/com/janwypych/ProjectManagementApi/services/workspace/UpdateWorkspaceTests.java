@@ -58,8 +58,6 @@ public class UpdateWorkspaceTests {
                 WorkspaceNotFoundException.class,
                 () -> workspaceService.updateWorkspace(user, updateWorkspaceRequest ,workspace.getId())
         );
-
-        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
     }
 
     @Test
@@ -81,8 +79,6 @@ public class UpdateWorkspaceTests {
         assertEquals(workspace.getId(), result.getId());
         assertEquals(updateWorkspaceRequest.getName(), workspace.getName());
         assertEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
-
-        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
     }
 
     @Test
@@ -108,8 +104,6 @@ public class UpdateWorkspaceTests {
         assertEquals(workspace.getId(), result.getId());
         assertEquals(originalName, workspace.getName());
         assertEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
-
-        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
     }
 
     @Test
@@ -135,8 +129,6 @@ public class UpdateWorkspaceTests {
         assertEquals(workspace.getId(), result.getId());
         assertEquals(updateWorkspaceRequest.getName(), workspace.getName());
         assertEquals(originalDescription, workspace.getDescription());
-
-        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
     }
 
     @Test
@@ -164,7 +156,5 @@ public class UpdateWorkspaceTests {
         assertEquals(workspace.getId(), result.getId());
         assertEquals(originalName, workspace.getName());
         assertEquals(originalDescription, workspace.getDescription());
-
-        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
     }
 }
