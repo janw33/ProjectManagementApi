@@ -71,20 +71,99 @@ public class UpdateWorkspaceTests {
         assertNotEquals(updateWorkspaceRequest.getName(), workspace.getName());
         assertNotEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
 
-        WorkspaceMember member = WorkspaceMember.builder()
-                .user(user)
-                .workspace(workspace)
-                .role(WorkspaceRole.OWNER)
-                .build();
+        WorkspaceMember member = TestDataUtil.workspaceMember(user, workspace);
 
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(member));
 
         WorkspaceIdResponse result = workspaceService.updateWorkspace(user, updateWorkspaceRequest, workspace.getId());
 
-        assertEquals(result.getId(), workspace.getId());
+        assertEquals(workspace.getId(), result.getId());
         assertEquals(updateWorkspaceRequest.getName(), workspace.getName());
         assertEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
+
+        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
+    }
+
+    @Test
+    public void shouldUpdateOnlyDescriptionWhenNameIsNull() {
+        User user = TestDataUtil.user();
+
+        UpdateWorkspaceRequest updateWorkspaceRequest = TestDataUtil.updateWorkspaceRequest();
+        updateWorkspaceRequest.setName(null);
+
+        Workspace workspace = TestDataUtil.workspace();
+        String originalName = workspace.getName();
+
+        assertNotEquals(updateWorkspaceRequest.getName(), workspace.getName());
+        assertNotEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
+
+        WorkspaceMember member = TestDataUtil.workspaceMember(user, workspace);
+
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.of(member));
+
+        WorkspaceIdResponse result = workspaceService.updateWorkspace(user, updateWorkspaceRequest, workspace.getId());
+
+        assertEquals(workspace.getId(), result.getId());
+        assertEquals(originalName, workspace.getName());
+        assertEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
+
+        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
+    }
+
+    @Test
+    public void shouldUpdateOnlyNameWhenDescriptionIsNull() {
+        User user = TestDataUtil.user();
+
+        UpdateWorkspaceRequest updateWorkspaceRequest = TestDataUtil.updateWorkspaceRequest();
+        updateWorkspaceRequest.setDescription(null);
+
+        Workspace workspace = TestDataUtil.workspace();
+        String originalDescription = workspace.getDescription();
+
+        assertNotEquals(updateWorkspaceRequest.getName(), workspace.getName());
+        assertNotEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
+
+        WorkspaceMember member = TestDataUtil.workspaceMember(user, workspace);
+
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.of(member));
+
+        WorkspaceIdResponse result = workspaceService.updateWorkspace(user, updateWorkspaceRequest, workspace.getId());
+
+        assertEquals(workspace.getId(), result.getId());
+        assertEquals(updateWorkspaceRequest.getName(), workspace.getName());
+        assertEquals(originalDescription, workspace.getDescription());
+
+        verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
+    }
+
+    @Test
+    public void shouldBeTheSameWhenBothNameAndDescriptionAreNull() {
+        User user = TestDataUtil.user();
+
+        UpdateWorkspaceRequest updateWorkspaceRequest = TestDataUtil.updateWorkspaceRequest();
+        updateWorkspaceRequest.setName(null);
+        updateWorkspaceRequest.setDescription(null);
+
+        Workspace workspace = TestDataUtil.workspace();
+        String originalName = workspace.getName();
+        String originalDescription = workspace.getDescription();
+
+        assertNotEquals(updateWorkspaceRequest.getName(), workspace.getName());
+        assertNotEquals(updateWorkspaceRequest.getDescription(), workspace.getDescription());
+
+        WorkspaceMember member = TestDataUtil.workspaceMember(user, workspace);
+
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.of(member));
+
+        WorkspaceIdResponse result = workspaceService.updateWorkspace(user, updateWorkspaceRequest, workspace.getId());
+
+        assertEquals(workspace.getId(), result.getId());
+        assertEquals(originalName, workspace.getName());
+        assertEquals(originalDescription, workspace.getDescription());
 
         verify(workspaceMemberRepository).findByWorkspaceIdAndUser(workspace.getId(), user);
     }

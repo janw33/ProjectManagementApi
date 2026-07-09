@@ -62,8 +62,13 @@ public class WorkspaceService {
 
         Workspace workspace = member.getWorkspace();
 
-        workspace.setName(updateWorkspaceRequest.getName());
-        workspace.setDescription(updateWorkspaceRequest.getDescription());
+        if (updateWorkspaceRequest.getName() != null) {
+            workspace.setName(updateWorkspaceRequest.getName());
+        }
+
+        if (updateWorkspaceRequest.getDescription() != null) {
+            workspace.setDescription(updateWorkspaceRequest.getDescription());
+        }
 
         return workspaceMapper.toIdResponse(workspace);
     }

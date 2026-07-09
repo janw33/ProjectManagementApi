@@ -49,4 +49,13 @@ public class ProjectController {
     ) {
         return ResponseEntity.ok(projectService.getProject(currentUser, workspaceId, projectId));
     }
+
+//    @PostMapping
+//    public ResponseEntity<ProjectIdResponse> updateProject(
+//            @AuthenticationPrincipal User currentUser,
+//            @RequestBody
+//            @PathVariable("workspaceId") Long workspaceId
+//    ) {
+//        //return ResponseEntity.ok(projectService.updateProject(currentUser, workspaceId);
+//    }
 }

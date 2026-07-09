@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.dtos.workspace;
+package com.janwypych.ProjectManagementApi.dtos.Project;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -12,12 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UpdateWorkspaceRequest {
+public class UpdateProjectRequest {
+    @NotBlank(message = "Name cannot be blank")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
-    @Pattern(
-            regexp = "^(?!\\s+$).*$",
-            message = "Name cannot contain only whitespace"
-    )
     private String name;
 
     @Size(max = 500, message = "Description must be at most 500 characters long")

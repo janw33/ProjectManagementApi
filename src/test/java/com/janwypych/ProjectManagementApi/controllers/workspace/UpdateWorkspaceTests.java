@@ -69,7 +69,7 @@ public class UpdateWorkspaceTests {
     }
 
     @Test
-    public void shouldReturn401WhenUserIsUnauthenticated() throws Exception {
+    public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
         UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
@@ -83,20 +83,7 @@ public class UpdateWorkspaceTests {
     }
 
     @Test
-    public void shouldReturnHttp400WhenNameIsNull() throws Exception {
-        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
-        Long workspaceId = 1L;
-        request.setName(null);
-        performUpdate(workspaceId,
-                request,
-                status().isBadRequest(),
-                jsonPath("$.error").value("VALIDATION_ERROR"),
-                jsonPath("$.validationErrors.name").value("Name cannot be blank"));
-    }
-
-
-    @Test
-    public void shouldReturnHttp400WhenNameIsBlank() throws Exception {
+    public void shouldReturnHttp400WhenNameIsOnlyWhitespaces() throws Exception {
         UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
         Long workspaceId = 1L;
         request.setName("    ");
@@ -104,7 +91,7 @@ public class UpdateWorkspaceTests {
                 request,
                 status().isBadRequest(),
                 jsonPath("$.error").value("VALIDATION_ERROR"),
-                jsonPath("$.validationErrors.name").value("Name cannot be blank"));
+                jsonPath("$.validationErrors.name").value("Name cannot contain only whitespace"));
     }
 
     @Test
@@ -174,6 +161,55 @@ public class UpdateWorkspaceTests {
     @Test
     public void shouldReturnHttp200WhenRequestIsValid() throws Exception{
         UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+        Long workspaceId = 1L;
+        WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
+
+        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
+                .thenReturn(workspaceIdResponse);
+
+        performUpdate(workspaceId,
+                request,
+                status().isOk(),
+                jsonPath("$.id").value(1L));
+    }
+
+    @Test
+    public void shouldReturnHttp200WhenNameIsNull() throws Exception{
+        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+        request.setName(null);
+        Long workspaceId = 1L;
+        WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
+
+        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
+                .thenReturn(workspaceIdResponse);
+
+        performUpdate(workspaceId,
+                request,
+                status().isOk(),
+                jsonPath("$.id").value(1L));
+    }
+
+    @Test
+    public void shouldReturnHttp200WhenDescriptionIsNull() throws Exception{
+        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+        request.setDescription(null);
+        Long workspaceId = 1L;
+        WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
+
+        when(workspaceService.updateWorkspace(any(User.class), eq(request), eq(workspaceId)))
+                .thenReturn(workspaceIdResponse);
+
+        performUpdate(workspaceId,
+                request,
+                status().isOk(),
+                jsonPath("$.id").value(1L));
+    }
+
+    @Test
+    public void shouldReturnHttp200WhenDescriptionAndNameAreNull() throws Exception{
+        UpdateWorkspaceRequest request = TestDataUtil.updateWorkspaceRequest();
+        request.setName(null);
+        request.setDescription(null);
         Long workspaceId = 1L;
         WorkspaceIdResponse workspaceIdResponse = new WorkspaceIdResponse(1L);
 

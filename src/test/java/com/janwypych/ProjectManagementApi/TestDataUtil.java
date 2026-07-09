@@ -10,6 +10,7 @@ import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsRespons
 import com.janwypych.ProjectManagementApi.entities.Project;
 import com.janwypych.ProjectManagementApi.entities.User;
 import com.janwypych.ProjectManagementApi.entities.Workspace;
+import com.janwypych.ProjectManagementApi.entities.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 
 import java.time.LocalDateTime;
@@ -90,5 +91,11 @@ public final class TestDataUtil {
                 .build();
     }
 
-
+    public static WorkspaceMember workspaceMember(User user, Workspace workspace) {
+        return WorkspaceMember.builder()
+                .user(user)
+                .workspace(workspace)
+                .role(WorkspaceRole.OWNER)
+                .build();
+    }
 }
