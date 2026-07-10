@@ -11,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1/workspaces/{workspaceId}/projects/{projectId}")
+@RequestMapping("/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks")
 public class TaskController {
     private final TaskService taskService;
 

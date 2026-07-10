@@ -25,6 +25,6 @@ public class CreateTaskRequest {
     )
     private String description;
 
-    @NotNull
+    @NotNull(message = "Assignee id cannot be null")
     private Long assigneeProjectMemberId;
 }
