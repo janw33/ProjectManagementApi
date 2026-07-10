@@ -1,0 +1,109 @@
+package com.janwypych.ProjectManagementApi.services.task;
+
+import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
+import com.janwypych.ProjectManagementApi.entities.task.Task;
+import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.mappers.task.TaskMapper;
+import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository;
+import com.janwypych.ProjectManagementApi.repositories.projectMember.ProjectMemberRepository;
+import com.janwypych.ProjectManagementApi.repositories.task.TaskRepository;
+import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+
+@ExtendWith(MockitoExtension.class)
+public class GetTasksTests extends BaseTestTask{
+    @Mock
+    private WorkspaceMemberRepository workspaceMemberRepository;
+
+    @Mock
+    private ProjectRepository projectRepository;
+
+    @Mock
+    private ProjectMemberRepository projectMemberRepository;
+
+    private final TaskMapper taskMapper = new TaskMapper();
+
+    @Mock
+    private TaskRepository taskRepository;
+
+    private TaskService taskService;
+
+    @BeforeEach
+    void setUp() {
+        taskService = new TaskService(
+                workspaceMemberRepository,
+                projectRepository,
+                projectMemberRepository,
+                taskMapper,
+                taskRepository
+        );
+    }
+
+    @Test
+    public void shouldThrowWorkspaceNotFoundException() {
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                WorkspaceNotFoundException.class,
+                () -> taskService.getTasks(user, workspace.getId(), project.getId(), Pageable.unpaged())
+        );
+
+        verify(taskRepository, never()).findAllByProject(any(), any());
+    }
+
+    @Test
+    public void shouldThrowProjectNotFoundException() {
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.of(workspaceMember));
+
+        when(projectRepository.findByIdAndWorkspace(project.getId(), workspace))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                ProjectNotFoundException.class,
+                () -> taskService.getTasks(user, workspace.getId(), project.getId(), Pageable.unpaged())
+        );
+
+        verify(taskRepository, never()).findAllByProject(any(), any());
+    }
+
+    @Test
+    public void shouldGetTasksWhenProjectIsFound() {
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.of(workspaceMember));
+
+        when(projectRepository.findByIdAndWorkspace(project.getId(), workspace))
+                .thenReturn(Optional.of(project));
+
+        when(taskRepository.findAllByProject(project, Pageable.unpaged()))
+                .thenReturn(new PageImpl<>(List.of(task)));
+
+        Page<TaskSummaryResponse> result = taskService.getTasks(user, workspace.getId(), project.getId(), Pageable.unpaged());
+
+        assertEquals(1, result.getTotalElements());
+        assertEquals(task.getId(), result.getContent().getFirst().getId());
+        assertEquals(task.getName(), result.getContent().getFirst().getName());
+        assertEquals(task.getStatus(), result.getContent().getFirst().getStatus());
+        assertEquals(task.getAssignee().getWorkspaceMember().getUser().getUsername(), result.getContent().getFirst().getAssigneeUsername());
+
+        verify(taskRepository).findAllByProject(any(), any());
+    }
+}

@@ -3,6 +3,7 @@ package com.janwypych.ProjectManagementApi.services.task;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
+import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import com.janwypych.ProjectManagementApi.entities.task.Task;
@@ -39,10 +40,11 @@ public class TaskService {
 
 
     public TaskIdResponse createTask(User currentUser, CreateTaskRequest request, Long workspaceId, Long projectId) {
-        Workspace workspace = workspaceMemberRepository
+        WorkspaceMember member = workspaceMemberRepository
                 .findByWorkspaceIdAndUser(workspaceId, currentUser)
-                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"))
-                .getWorkspace();
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
 
         Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
                 .orElseThrow(ProjectNotFoundException::new);
@@ -57,10 +59,11 @@ public class TaskService {
     }
 
     public Page<TaskSummaryResponse> getTasks(User currentUser, Long workspaceId, Long projectId, Pageable pageable) {
-        Workspace workspace = workspaceMemberRepository
+        WorkspaceMember member = workspaceMemberRepository
                 .findByWorkspaceIdAndUser(workspaceId, currentUser)
-                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"))
-                .getWorkspace();
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
 
         Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
                 .orElseThrow(ProjectNotFoundException::new);
