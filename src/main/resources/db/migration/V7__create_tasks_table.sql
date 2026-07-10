@@ -7,7 +7,7 @@ CREATE TABLE tasks (
     status VARCHAR(20) NOT NULL,
 
     project_id BIGINT NOT NULL,
-    assignee_id BIGINT,
+    assignee_project_member_id BIGINT,
 
     CONSTRAINT fk_tasks_project
         FOREIGN KEY (project_id)
@@ -15,7 +15,7 @@ CREATE TABLE tasks (
         ON DELETE CASCADE,
 
     CONSTRAINT fk_tasks_assignee
-        FOREIGN KEY (assignee_id)
-        REFERENCES users(id)
+        FOREIGN KEY (assignee_project_member_id)
+        REFERENCES project_members(id)
         ON DELETE SET NULL
 );

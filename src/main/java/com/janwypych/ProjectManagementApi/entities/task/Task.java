@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.entities.task;
 
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
-import com.janwypych.ProjectManagementApi.entities.user.User;
+import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,8 +43,8 @@ public class Task {
     private TaskStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignee_id")
-    private User assignee;
+    @JoinColumn(name = "assignee_project_member_id")
+    private ProjectMember assignee;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id", nullable = false)
