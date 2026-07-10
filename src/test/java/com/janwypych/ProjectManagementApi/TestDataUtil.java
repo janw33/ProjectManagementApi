@@ -5,6 +5,7 @@ import com.janwypych.ProjectManagementApi.dtos.Project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
+import com.janwypych.ProjectManagementApi.dtos.task.UpdateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
@@ -32,6 +33,16 @@ public final class TestDataUtil {
                 .id(1L)
                 .username("test")
                 .email("test@email.com")
+                .password("testPassword")
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static User user2() {
+        return User.builder()
+                .id(2L)
+                .username("test1")
+                .email("test1@email.com")
                 .password("testPassword")
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -103,6 +114,14 @@ public final class TestDataUtil {
                 .build();
     }
 
+    public static WorkspaceMember workspaceMember2(User user2, Workspace workspace) {
+        return WorkspaceMember.builder()
+                .user(user2)
+                .workspace(workspace)
+                .role(WorkspaceRole.MANAGER)
+                .build();
+    }
+
     public static UpdateProjectRequest updateProjectRequest() {
         return UpdateProjectRequest.builder()
                 .name("test1")
@@ -118,11 +137,20 @@ public final class TestDataUtil {
                 .build();
     }
 
-    public static ProjectMember createProjectMember(WorkspaceMember workspaceMember, Project project) {
+    public static ProjectMember projectMember(WorkspaceMember workspaceMember, Project project) {
         return ProjectMember.builder()
                 .id(1L)
                 .joinedAt(LocalDateTime.now())
                 .workspaceMember(workspaceMember)
+                .project(project)
+                .build();
+    }
+
+    public static ProjectMember projectMember2(WorkspaceMember workspaceMember2, Project project) {
+        return ProjectMember.builder()
+                .id(2L)
+                .joinedAt(LocalDateTime.now())
+                .workspaceMember(workspaceMember2)
                 .project(project)
                 .build();
     }
@@ -139,4 +167,16 @@ public final class TestDataUtil {
                 .project(project)
                 .build();
     }
+
+    public static UpdateTaskRequest updateTaskRequest() {
+        return UpdateTaskRequest.builder()
+                .name("test1")
+                .description("test1")
+                .status(TaskStatus.DONE)
+                .assigneeProjectMemberId(2L)
+                .build();
+    }
+
+
+
 }
