@@ -128,8 +128,7 @@ public class UpdateTaskTests extends BaseTestTask {
         assertEquals(updateTaskRequest.getAssigneeProjectMemberId(), task.getAssignee().getId());
     }
 
-    @Test
-    public void shouldThrowProjectMemberNotFound() {
+    public void shouldThrowProjectMemberNotFoundException() {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
