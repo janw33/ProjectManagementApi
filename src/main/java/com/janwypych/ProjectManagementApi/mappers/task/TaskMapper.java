@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi.mappers.task;
 
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
@@ -22,5 +23,14 @@ public class TaskMapper {
 
     public TaskIdResponse toIdResponse(Task savedTask) {
         return new TaskIdResponse(savedTask.getId());
+    }
+
+    public TaskSummaryResponse toSummaryResponse(Task task) {
+        return TaskSummaryResponse.builder()
+                .id(task.getId())
+                .name(task.getName())
+                .assigneeUsername(task.getAssignee().getWorkspaceMember().getUser().getUsername())
+                .status(task.getStatus())
+                .build();
     }
 }

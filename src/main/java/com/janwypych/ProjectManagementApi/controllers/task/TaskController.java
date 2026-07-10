@@ -2,9 +2,12 @@ package com.janwypych.ProjectManagementApi.controllers.task;
 
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.task.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,5 +30,15 @@ public class TaskController {
             @PathVariable("projectId") Long projectId
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(currentUser, request, workspaceId, projectId));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<TaskSummaryResponse>> getTasks(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(taskService.getTasks(currentUser, workspaceId, projectId, pageable));
     }
 }
