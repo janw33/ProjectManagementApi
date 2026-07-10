@@ -1,9 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.task;
 
-import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
-import com.janwypych.ProjectManagementApi.dtos.task.TaskDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
-import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.task.*;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.task.TaskService;
 import jakarta.validation.Valid;
@@ -51,5 +48,16 @@ public class TaskController {
             @PathVariable("taskId") Long taskId
     ) {
         return ResponseEntity.ok(taskService.getTask(currentUser, workspaceId, projectId, taskId));
+    }
+
+    @PatchMapping(path = "/{taskId}")
+    public ResponseEntity<TaskIdResponse> updateTask(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody @Valid UpdateTaskRequest updateTaskRequest,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("taskId") Long taskId
+    ) {
+        return ResponseEntity.ok(taskService.updateTask(currentUser, updateTaskRequest, workspaceId, projectId, taskId));
     }
 }
