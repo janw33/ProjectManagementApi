@@ -1,15 +1,12 @@
 package com.janwypych.ProjectManagementApi.controllers.task;
 
-import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
-import com.janwypych.ProjectManagementApi.services.project.ProjectService;
-import com.janwypych.ProjectManagementApi.services.task.BaseTestTask;
+import com.janwypych.ProjectManagementApi.BaseTestTask;
 import com.janwypych.ProjectManagementApi.services.task.TaskService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

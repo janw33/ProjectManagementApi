@@ -1,6 +1,5 @@
-package com.janwypych.ProjectManagementApi.services.task;
+package com.janwypych.ProjectManagementApi;
 
-import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;

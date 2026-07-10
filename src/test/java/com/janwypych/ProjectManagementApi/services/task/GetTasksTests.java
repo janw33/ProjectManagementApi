@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.services.task;
 
+import com.janwypych.ProjectManagementApi.BaseTestTask;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
-import com.janwypych.ProjectManagementApi.entities.task.Task;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.task.TaskMapper;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
-public class GetTasksTests extends BaseTestTask{
+public class GetTasksTests extends BaseTestTask {
     @Mock
     private WorkspaceMemberRepository workspaceMemberRepository;
 
