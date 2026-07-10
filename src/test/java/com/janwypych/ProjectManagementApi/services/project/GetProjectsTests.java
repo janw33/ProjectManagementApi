@@ -87,7 +87,7 @@ public class GetProjectsTests {
         when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
 
-        when(projectMemberRepository.findAllByUserAndProject_Workspace(user, workspace))
+        when(projectMemberRepository.findAllByWorkspaceMemberAndProject_Workspace(workspaceMember, workspace))
                 .thenReturn(List.of());
 
         Page<ProjectSummaryResponse> result = projectService.getProjects(user, workspace.getId(), Pageable.unpaged());
@@ -118,7 +118,7 @@ public class GetProjectsTests {
         when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
 
-        when(projectMemberRepository.findAllByUserAndProject_Workspace(user, workspace))
+        when(projectMemberRepository.findAllByWorkspaceMemberAndProject_Workspace(workspaceMember, workspace))
                 .thenReturn(List.of());
 
         Page<ProjectSummaryResponse> result = projectService.getProjects(user, workspace.getId(), Pageable.unpaged());
@@ -148,7 +148,7 @@ public class GetProjectsTests {
         when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
 
-        when(projectMemberRepository.findAllByUserAndProject_Workspace(user, workspace))
+        when(projectMemberRepository.findAllByWorkspaceMemberAndProject_Workspace(workspaceMember, workspace))
                 .thenReturn(List.of());
 
         Page<ProjectSummaryResponse> result = projectService.getProjects(user, workspace.getId(), Pageable.unpaged());
@@ -184,10 +184,10 @@ public class GetProjectsTests {
                 .id(1L)
                 .project(project)
                 .joinedAt(LocalDateTime.now())
-                .user(user)
+                .workspaceMember(workspaceMember)
                 .build();
 
-        when(projectMemberRepository.findAllByUserAndProject_Workspace(user, workspace))
+        when(projectMemberRepository.findAllByWorkspaceMemberAndProject_Workspace(workspaceMember, workspace))
                 .thenReturn(List.of(projectMember));
 
         Page<ProjectSummaryResponse> result = projectService.getProjects(user, workspace.getId(), Pageable.unpaged());

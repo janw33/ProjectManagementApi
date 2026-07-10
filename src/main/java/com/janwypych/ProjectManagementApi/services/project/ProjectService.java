@@ -35,10 +35,11 @@ public class ProjectService {
     }
 
     public ProjectIdResponse createProject(User currentUser, CreateProjectRequest createProjectRequest, Long workspaceId) {
-        Workspace workspace = workspaceMemberRepository
+        WorkspaceMember member = workspaceMemberRepository
                 .findByWorkspaceIdAndUser(workspaceId, currentUser)
-                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"))
-                .getWorkspace();
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
 
         Project project = projectMapper.toEntity(createProjectRequest, workspace);
 
