@@ -19,13 +19,13 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-//    @PostMapping
-//    public ResponseEntity<TaskIdResponse> createTask(
-//            @AuthenticationPrincipal User currentUser,
-//            @RequestBody @Valid CreateTaskRequest request,
-//            @PathVariable("workspaceId") Long workspaceId,
-//            @PathVariable("projectId") Long projectId
-//    ) {
-//        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(currentUser, request, workspaceId, projectId));
-//    }
+    @PostMapping
+    public ResponseEntity<TaskIdResponse> createTask(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody @Valid CreateTaskRequest request,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(currentUser, request, workspaceId, projectId));
+    }
 }
