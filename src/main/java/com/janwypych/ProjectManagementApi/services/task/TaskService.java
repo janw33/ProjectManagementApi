@@ -1,9 +1,9 @@
 package com.janwypych.ProjectManagementApi.services.task;
 
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
+import com.janwypych.ProjectManagementApi.dtos.task.TaskDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
-import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import com.janwypych.ProjectManagementApi.entities.task.Task;
@@ -12,6 +12,7 @@ import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.task.TaskMapper;
 import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository;
@@ -71,5 +72,21 @@ public class TaskService {
         Page<Task> tasks = taskRepository.findAllByProject(project, pageable);
 
         return tasks.map(taskMapper::toSummaryResponse);
+    }
+
+    public TaskDetailsResponse getTask(User currentUser, Long workspaceId, Long projectId, Long taskId) {
+        WorkspaceMember member = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        Task task = taskRepository.findByIdAndProject(taskId, project)
+                .orElseThrow(TaskNotFoundException::new);
+
+        return taskMapper.toDetailsResponse(task);
     }
 }

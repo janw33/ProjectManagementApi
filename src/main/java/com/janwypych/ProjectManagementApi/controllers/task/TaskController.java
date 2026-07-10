@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.controllers.task;
 
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
+import com.janwypych.ProjectManagementApi.dtos.task.TaskDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
@@ -40,5 +41,15 @@ public class TaskController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(taskService.getTasks(currentUser, workspaceId, projectId, pageable));
+    }
+
+    @GetMapping(path = "/{taskId}")
+    public ResponseEntity<TaskDetailsResponse> getTask(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("taskId") Long taskId
+    ) {
+        return ResponseEntity.ok(taskService.getTask(currentUser, workspaceId, projectId, taskId));
     }
 }
