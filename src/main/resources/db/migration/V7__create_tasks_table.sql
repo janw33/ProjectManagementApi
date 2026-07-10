@@ -5,10 +5,17 @@ CREATE TABLE tasks (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(20) NOT NULL,
+
     project_id BIGINT NOT NULL,
+    assignee_id BIGINT,
 
     CONSTRAINT fk_tasks_project
         FOREIGN KEY (project_id)
         REFERENCES projects(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_tasks_assignee
+        FOREIGN KEY (assignee_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL
 );

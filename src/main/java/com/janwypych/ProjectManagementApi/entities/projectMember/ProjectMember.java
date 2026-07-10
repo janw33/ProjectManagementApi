@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi.entities.projectMember;
 
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
+import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(
         name = "project_members",
         uniqueConstraints = @UniqueConstraint(
-                columnNames = {"project_id", "user_id"}
+                columnNames = {"project_id", "workspace_member_id"}
         )
 )
 @Builder
@@ -36,6 +37,6 @@ public class ProjectMember {
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "workspace_member_id", nullable = false)
+    private WorkspaceMember workspaceMember;
 }

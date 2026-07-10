@@ -62,7 +62,7 @@ public class ProjectService {
                         || member.getRole() == WorkspaceRole.MANAGER;
 
         Set<Long> accessibleProjects = projectMemberRepository
-                .findAllByUserAndProject_Workspace(currentUser, workspace)
+                .findAllByWorkspaceMemberAndProject_Workspace(member, workspace)
                 .stream()
                 .map(pm -> pm.getProject().getId())
                 .collect(Collectors.toSet());
