@@ -1,9 +1,6 @@
 package com.janwypych.ProjectManagementApi.services.task;
 
-import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
-import com.janwypych.ProjectManagementApi.dtos.task.TaskDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
-import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.task.*;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import com.janwypych.ProjectManagementApi.entities.task.Task;
@@ -19,9 +16,11 @@ import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository
 import com.janwypych.ProjectManagementApi.repositories.projectMember.ProjectMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.task.TaskRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TaskService {
@@ -88,5 +87,42 @@ public class TaskService {
                 .orElseThrow(TaskNotFoundException::new);
 
         return taskMapper.toDetailsResponse(task);
+    }
+
+    @Transactional
+    public TaskIdResponse updateTask(User currentUser, UpdateTaskRequest updateTaskRequest, Long workspaceId, Long projectId, Long taskId) {
+        WorkspaceMember member = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        Task task = taskRepository.findByIdAndProject(taskId, project)
+                .orElseThrow(TaskNotFoundException::new);
+
+        if (updateTaskRequest.getName() != null) {
+            task.setName(updateTaskRequest.getName());
+        }
+
+        if (updateTaskRequest.getDescription() != null) {
+            task.setDescription(updateTaskRequest.getDescription());
+        }
+
+        if (updateTaskRequest.getStatus() != null) {
+            task.setStatus(updateTaskRequest.getStatus());
+        }
+
+        if (updateTaskRequest.getAssigneeProjectMemberId() != null) {
+            ProjectMember assignee = projectMemberRepository
+                    .findByIdAndProject(updateTaskRequest.getAssigneeProjectMemberId(), project)
+                    .orElseThrow(ProjectMemberNotFoundException::new);
+
+            task.setAssignee(assignee);
+        }
+
+        return taskMapper.toIdResponse(task);
     }
 }
