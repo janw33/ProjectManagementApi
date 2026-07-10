@@ -16,6 +16,7 @@ public class TaskMapper {
                 .description(request.getDescription())
                 .status(TaskStatus.NOT_STARTED)
                 .project(project)
+                .assignee(projectMember)
                 .build();
     }
 

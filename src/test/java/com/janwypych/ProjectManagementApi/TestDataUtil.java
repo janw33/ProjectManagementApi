@@ -4,10 +4,14 @@ import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.Project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
+import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
+import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
+import com.janwypych.ProjectManagementApi.entities.task.Task;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
@@ -103,6 +107,36 @@ public final class TestDataUtil {
         return UpdateProjectRequest.builder()
                 .name("test1")
                 .description("test1")
+                .build();
+    }
+
+    public static CreateTaskRequest createTaskRequest() {
+        return CreateTaskRequest.builder()
+                .name("test")
+                .description("test")
+                .assigneeProjectMemberId(1L)
+                .build();
+    }
+
+    public static ProjectMember createProjectMember(WorkspaceMember workspaceMember, Project project) {
+        return ProjectMember.builder()
+                .id(1L)
+                .joinedAt(LocalDateTime.now())
+                .workspaceMember(workspaceMember)
+                .project(project)
+                .build();
+    }
+
+    public static Task task(ProjectMember projectMember, Project project) {
+        return Task.builder()
+                .id(1L)
+                .name("test")
+                .description("test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .status(TaskStatus.NOT_STARTED)
+                .assignee(projectMember)
+                .project(project)
                 .build();
     }
 }
