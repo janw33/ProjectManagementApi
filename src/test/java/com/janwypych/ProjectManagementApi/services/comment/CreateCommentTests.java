@@ -1,10 +1,7 @@
 package com.janwypych.ProjectManagementApi.services.comment;
 
 import com.janwypych.ProjectManagementApi.BaseTestComment;
-import com.janwypych.ProjectManagementApi.dtos.comment.CommentIdResponse;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
-import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
-import com.janwypych.ProjectManagementApi.entities.task.Task;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
@@ -148,9 +145,7 @@ public class CreateCommentTests extends BaseTestComment {
         when(commentRepository.save(any(Comment.class)))
                 .thenReturn(comment);
 
-        CommentIdResponse result = commentService.createComment(user, createCommentRequest, workspace.getId(), project.getId(), task.getId());
-
-        assertEquals(comment.getId(), result.getId());
+        commentService.createComment(user, createCommentRequest, workspace.getId(), project.getId(), task.getId());;
 
         ArgumentCaptor<Comment> captor = ArgumentCaptor.forClass(Comment.class);
 

@@ -1,7 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.comment;
 
 import com.janwypych.ProjectManagementApi.BaseTestComment;
-import com.janwypych.ProjectManagementApi.dtos.comment.CommentIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
@@ -25,7 +24,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,8 +110,15 @@ public class CreateCommentTests extends BaseTestComment {
 
     @Test
     public void shouldReturnHttp404WhenWorkspaceIsNotFound() throws Exception {
-        when(commentService.createComment(any(User.class), eq(createCommentRequest), eq(workspace.getId()), eq(project.getId()), eq(task.getId())))
-                .thenThrow(new WorkspaceNotFoundException());
+        doThrow(new WorkspaceNotFoundException())
+                .when(commentService)
+                .createComment(
+                        any(User.class),
+                        eq(createCommentRequest),
+                        eq(workspace.getId()),
+                        eq(project.getId()),
+                        eq(task.getId())
+                );
 
         performCreate(workspace.getId(), project.getId(), task.getId(), createCommentRequest,
                 status().isNotFound(),
@@ -122,8 +128,15 @@ public class CreateCommentTests extends BaseTestComment {
 
     @Test
     public void shouldReturnHttp404WhenProjectIsNotFound() throws Exception {
-        when(commentService.createComment(any(User.class), eq(createCommentRequest), eq(workspace.getId()), eq(project.getId()), eq(task.getId())))
-                .thenThrow(new ProjectNotFoundException());
+        doThrow(new ProjectNotFoundException())
+                .when(commentService)
+                .createComment(
+                        any(User.class),
+                        eq(createCommentRequest),
+                        eq(workspace.getId()),
+                        eq(project.getId()),
+                        eq(task.getId())
+                );
 
         performCreate(workspace.getId(), project.getId(), task.getId(), createCommentRequest,
                 status().isNotFound(),
@@ -133,8 +146,15 @@ public class CreateCommentTests extends BaseTestComment {
 
     @Test
     public void shouldReturnHttp404WhenProjectMemberIsNotFound() throws Exception {
-        when(commentService.createComment(any(User.class), eq(createCommentRequest), eq(workspace.getId()), eq(project.getId()), eq(task.getId())))
-                .thenThrow(new ProjectMemberNotFoundException());
+        doThrow(new ProjectMemberNotFoundException())
+                .when(commentService)
+                .createComment(
+                        any(User.class),
+                        eq(createCommentRequest),
+                        eq(workspace.getId()),
+                        eq(project.getId()),
+                        eq(task.getId())
+                );
 
         performCreate(workspace.getId(), project.getId(), task.getId(), createCommentRequest,
                 status().isNotFound(),
@@ -144,8 +164,15 @@ public class CreateCommentTests extends BaseTestComment {
 
     @Test
     public void shouldReturnHttp404WhenTaskIsNotFound() throws Exception {
-        when(commentService.createComment(any(User.class), eq(createCommentRequest), eq(workspace.getId()), eq(project.getId()), eq(task.getId())))
-                .thenThrow(new TaskNotFoundException());
+        doThrow(new TaskNotFoundException())
+                .when(commentService)
+                .createComment(
+                        any(User.class),
+                        eq(createCommentRequest),
+                        eq(workspace.getId()),
+                        eq(project.getId()),
+                        eq(task.getId())
+                );
 
         performCreate(workspace.getId(), project.getId(), task.getId(), createCommentRequest,
                 status().isNotFound(),
@@ -155,11 +182,7 @@ public class CreateCommentTests extends BaseTestComment {
 
     @Test
     public void shouldReturnHttp201WhenRequestIsValid() throws Exception {
-        when(commentService.createComment(any(User.class), eq(createCommentRequest), eq(workspace.getId()), eq(project.getId()), eq(task.getId())))
-                .thenReturn(new CommentIdResponse(1L));
-
         performCreate(workspace.getId(), project.getId(), task.getId(), createCommentRequest,
-                status().isCreated(),
-                jsonPath("$.id").value(1L));
+                status().isCreated());
     }
 }

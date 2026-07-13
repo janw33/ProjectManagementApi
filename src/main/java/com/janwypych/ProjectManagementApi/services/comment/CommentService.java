@@ -1,6 +1,5 @@
 package com.janwypych.ProjectManagementApi.services.comment;
 
-import com.janwypych.ProjectManagementApi.dtos.comment.CommentIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
@@ -39,7 +38,7 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public CommentIdResponse createComment(User currentUser, CreateCommentRequest request, Long workspaceId, Long projectId, Long taskId) {
+    public void createComment(User currentUser, CreateCommentRequest request, Long workspaceId, Long projectId, Long taskId) {
         WorkspaceMember workspaceMember = workspaceMemberRepository
                 .findByWorkspaceIdAndUser(workspaceId, currentUser)
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
@@ -58,7 +57,5 @@ public class CommentService {
 
         Comment comment = commentMapper.toEntity(request, author, task);
         Comment savedComment = commentRepository.save(comment);
-
-        return commentMapper.toIdResponse(savedComment);
     }
 }

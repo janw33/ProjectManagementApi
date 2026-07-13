@@ -1,10 +1,10 @@
 package com.janwypych.ProjectManagementApi.controllers.comment;
 
-import com.janwypych.ProjectManagementApi.dtos.comment.CommentIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.comment.CommentService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,13 +20,14 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentIdResponse> createComment(
+    public ResponseEntity<Void> createComment(
             @AuthenticationPrincipal User currentUser,
             @RequestBody @Valid CreateCommentRequest request,
             @PathVariable("workspaceId") Long workspaceId,
             @PathVariable("projectId") Long projectId,
             @PathVariable("taskId") Long taskId
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(currentUser, request, workspaceId, projectId, taskId));
+        commentService.createComment(currentUser, request, workspaceId, projectId, taskId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

@@ -1,6 +1,5 @@
 package com.janwypych.ProjectManagementApi.mappers.comment;
 
-import com.janwypych.ProjectManagementApi.dtos.comment.CommentIdResponse;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
@@ -15,9 +14,5 @@ public class CommentMapper {
                 .author(author)
                 .task(task)
                 .build();
-    }
-
-    public CommentIdResponse toIdResponse(Comment savedComment) {
-        return new CommentIdResponse(savedComment.getId());
     }
 }
