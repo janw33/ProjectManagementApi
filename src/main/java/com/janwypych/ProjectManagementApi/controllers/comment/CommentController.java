@@ -56,6 +56,6 @@ public class CommentController {
             @PathVariable("commentId") Long commentId
     ) {
         commentService.updateComment(currentUser, request, workspaceId, projectId, taskId, commentId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok().build();
     }
 }
