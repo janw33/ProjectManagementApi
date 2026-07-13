@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi.services.comment;
 
 import com.janwypych.ProjectManagementApi.dtos.comment.CommentResponse;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
+import com.janwypych.ProjectManagementApi.dtos.comment.UpdateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
@@ -10,6 +11,7 @@ import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.comment.CommentNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
@@ -19,9 +21,11 @@ import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository
 import com.janwypych.ProjectManagementApi.repositories.projectMember.ProjectMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.task.TaskRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -79,8 +83,34 @@ public class CommentService {
         Task task = taskRepository.findByIdAndProject(taskId, project)
                 .orElseThrow(TaskNotFoundException::new);
 
-        Page<Comment> comments = commentRepository.findAllByTask(task, pageable);
+        Page<Comment> comments = commentRepository.findAllByTaskOrderByCreatedAtAsc(task, pageable);
 
         return comments.map(commentMapper::toResponse);
+    }
+
+    @Transactional
+    public void updateComment(User currentUser, UpdateCommentRequest request, Long workspaceId, Long projectId, Long taskId, Long commentId) {
+        WorkspaceMember workspaceMember = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = workspaceMember.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        if (!projectMemberRepository.existsByWorkspaceMemberAndProject(workspaceMember, project)) {
+            throw new ProjectMemberNotFoundException();
+        }
+
+        Task task = taskRepository.findByIdAndProject(taskId, project)
+                .orElseThrow(TaskNotFoundException::new);
+
+        Comment comment = commentRepository.findByIdAndTask(commentId, task)
+                .orElseThrow(CommentNotFoundException::new);
+
+        if(request.getContent() != null) {
+            comment.setContent(request.getContent());
+        }
     }
 }

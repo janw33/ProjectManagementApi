@@ -140,7 +140,7 @@ public class GetCommentsTests extends BaseTestComment {
         when(taskRepository.findByIdAndProject(task.getId(), project))
                 .thenReturn(Optional.of(task));
 
-        when(commentRepository.findAllByTask(task, Pageable.unpaged()))
+        when(commentRepository.findAllByTaskOrderByCreatedAtAsc(task, Pageable.unpaged()))
                 .thenReturn(new PageImpl<>(List.of(comment)));
 
         Page<CommentResponse> comments = commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged());
@@ -168,7 +168,7 @@ public class GetCommentsTests extends BaseTestComment {
 
         comment.setUpdatedAt(LocalDateTime.now().plusHours(1));
 
-        when(commentRepository.findAllByTask(task, Pageable.unpaged()))
+        when(commentRepository.findAllByTaskOrderByCreatedAtAsc(task, Pageable.unpaged()))
                 .thenReturn(new PageImpl<>(List.of(comment)));
 
         Page<CommentResponse> comments = commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged());

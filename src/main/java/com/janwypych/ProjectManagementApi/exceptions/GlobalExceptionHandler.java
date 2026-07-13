@@ -4,6 +4,7 @@ import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundExce
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.InvalidCredentialsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsException;
+import com.janwypych.ProjectManagementApi.exceptions.comment.CommentNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.error.ErrorResponse;
 import com.janwypych.ProjectManagementApi.exceptions.error.ValidationErrorResponse;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
@@ -177,5 +178,21 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(
+            CommentNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("COMMENT_NOT_FOUND")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }
