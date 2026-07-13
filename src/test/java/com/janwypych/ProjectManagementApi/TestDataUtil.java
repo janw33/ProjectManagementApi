@@ -185,11 +185,13 @@ public final class TestDataUtil {
     }
 
     public static Comment comment(ProjectMember projectMember, Task task) {
+        LocalDateTime now = LocalDateTime.now();
+
         return Comment.builder()
                 .id(1L)
                 .content("test")
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(now)
+                .updatedAt(now)
                 .author(projectMember)
                 .task(task)
                 .build();
