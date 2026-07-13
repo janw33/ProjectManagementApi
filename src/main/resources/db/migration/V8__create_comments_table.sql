@@ -10,7 +10,7 @@ CREATE TABLE comments (
     CONSTRAINT fk_comments_task
     FOREIGN KEY (task_id)
     REFERENCES tasks(id)
-    DELETE CASCADE,
+    ON DELETE CASCADE,
 
     CONSTRAINT fk_comments_author
     FOREIGN KEY (project_member_id)
