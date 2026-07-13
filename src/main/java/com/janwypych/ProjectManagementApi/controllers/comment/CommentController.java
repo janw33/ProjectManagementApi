@@ -1,10 +1,12 @@
 package com.janwypych.ProjectManagementApi.controllers.comment;
 
+import com.janwypych.ProjectManagementApi.dtos.comment.CommentResponse;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.comment.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,5 +31,16 @@ public class CommentController {
     ) {
         commentService.createComment(currentUser, request, workspaceId, projectId, taskId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<CommentResponse>> getComments(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("taskId") Long taskId,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(commentService.getComments(currentUser, workspaceId, projectId, taskId, pageable));
     }
 }

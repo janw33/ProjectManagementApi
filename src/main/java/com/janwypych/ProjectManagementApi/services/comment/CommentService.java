@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.services.comment;
 
+import com.janwypych.ProjectManagementApi.dtos.comment.CommentResponse;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
@@ -18,6 +19,8 @@ import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository
 import com.janwypych.ProjectManagementApi.repositories.projectMember.ProjectMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.task.TaskRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,5 +60,27 @@ public class CommentService {
 
         Comment comment = commentMapper.toEntity(request, author, task);
         Comment savedComment = commentRepository.save(comment);
+    }
+
+    public Page<CommentResponse> getComments(User currentUser, Long workspaceId, Long projectId, Long taskId, Pageable pageable) {
+        WorkspaceMember workspaceMember = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = workspaceMember.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        if (!projectMemberRepository.existsByWorkspaceMemberAndProject(workspaceMember, project)) {
+            throw new ProjectMemberNotFoundException();
+        }
+
+        Task task = taskRepository.findByIdAndProject(taskId, project)
+                .orElseThrow(TaskNotFoundException::new);
+
+        Page<Comment> comments = commentRepository.findAllByTask(task, pageable);
+
+        return comments.map(commentMapper::toResponse);
     }
 }
