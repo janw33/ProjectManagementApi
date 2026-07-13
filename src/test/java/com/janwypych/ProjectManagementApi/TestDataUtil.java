@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi;
 
+import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
@@ -9,6 +10,7 @@ import com.janwypych.ProjectManagementApi.dtos.task.UpdateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
+import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
@@ -178,5 +180,18 @@ public final class TestDataUtil {
     }
 
 
+    public static CreateCommentRequest createCommentRequest() {
+        return new CreateCommentRequest("test");
+    }
 
+    public static Comment comment(ProjectMember projectMember, Task task) {
+        return Comment.builder()
+                .id(1L)
+                .content("test")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .author(projectMember)
+                .task(task)
+                .build();
+    }
 }

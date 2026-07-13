@@ -27,6 +27,6 @@ public class CommentController {
             @PathVariable("projectId") Long projectId,
             @PathVariable("taskId") Long taskId
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(currentUser, request, workspaceId, projectId, taskId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(currentUser, request, workspaceId, projectId, taskId));
     }
 }
