@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi;
 
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
+import com.janwypych.ProjectManagementApi.dtos.comment.UpdateCommentRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
@@ -194,6 +195,12 @@ public final class TestDataUtil {
                 .updatedAt(now)
                 .author(projectMember)
                 .task(task)
+                .build();
+    }
+
+    public static UpdateCommentRequest updateCommentRequest() {
+        return UpdateCommentRequest.builder()
+                .content("test1")
                 .build();
     }
 }

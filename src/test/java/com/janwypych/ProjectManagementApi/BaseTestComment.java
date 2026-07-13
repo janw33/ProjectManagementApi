@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi;
 
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
+import com.janwypych.ProjectManagementApi.dtos.comment.UpdateCommentRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
@@ -21,6 +22,7 @@ public abstract class BaseTestComment {
     protected Comment comment;
 
     protected CreateCommentRequest createCommentRequest;
+    protected UpdateCommentRequest updateCommentRequest;
 
     @BeforeEach
     void setupBase() {
@@ -33,6 +35,7 @@ public abstract class BaseTestComment {
         comment = TestDataUtil.comment(projectMember, task);
 
         createCommentRequest = TestDataUtil.createCommentRequest();
+        updateCommentRequest = TestDataUtil.updateCommentRequest();
     }
 
 }

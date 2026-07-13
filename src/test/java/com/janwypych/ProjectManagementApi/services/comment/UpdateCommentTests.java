@@ -1,9 +1,8 @@
 package com.janwypych.ProjectManagementApi.services.comment;
 
 import com.janwypych.ProjectManagementApi.BaseTestComment;
-import com.janwypych.ProjectManagementApi.dtos.comment.CommentResponse;
-import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.comment.CommentNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
@@ -18,19 +17,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetCommentsTests extends BaseTestComment {
+public class UpdateCommentTests extends BaseTestComment {
     private final CommentMapper commentMapper = new CommentMapper();
 
     @Mock
@@ -69,7 +63,7 @@ public class GetCommentsTests extends BaseTestComment {
 
         assertThrows(
                 WorkspaceNotFoundException.class,
-                () -> commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged())
+                () -> commentService.updateComment(user, updateCommentRequest ,workspace.getId(), project.getId(), task.getId(), comment.getId())
         );
     }
 
@@ -83,7 +77,7 @@ public class GetCommentsTests extends BaseTestComment {
 
         assertThrows(
                 ProjectNotFoundException.class,
-                () -> commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged())
+                () -> commentService.updateComment(user, updateCommentRequest ,workspace.getId(), project.getId(), task.getId(), comment.getId())
         );
     }
 
@@ -100,7 +94,7 @@ public class GetCommentsTests extends BaseTestComment {
 
         assertThrows(
                 ProjectMemberNotFoundException.class,
-                () -> commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged())
+                () -> commentService.updateComment(user, updateCommentRequest ,workspace.getId(), project.getId(), task.getId(), comment.getId())
         );
     }
 
@@ -120,12 +114,12 @@ public class GetCommentsTests extends BaseTestComment {
 
         assertThrows(
                 TaskNotFoundException.class,
-                () -> commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged())
+                () -> commentService.updateComment(user, updateCommentRequest ,workspace.getId(), project.getId(), task.getId(), comment.getId())
         );
     }
 
     @Test
-    public void shouldGetCommentsWhenTaskExists() {
+    public void shouldThrowCommentNotFoundException() {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
@@ -138,20 +132,17 @@ public class GetCommentsTests extends BaseTestComment {
         when(taskRepository.findByIdAndProject(task.getId(), project))
                 .thenReturn(Optional.of(task));
 
-        when(commentRepository.findAllByTaskOrderByCreatedAtAsc(task, Pageable.unpaged()))
-                .thenReturn(new PageImpl<>(List.of(comment)));
+        when(commentRepository.findByIdAndTask(comment.getId(), task))
+                .thenReturn(Optional.empty());
 
-        Page<CommentResponse> comments = commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged());
-
-        assertEquals(1, comments.getTotalElements());
-        assertEquals(comment.getId(), comments.getContent().getFirst().getId());
-        assertEquals(comment.getContent(), comments.getContent().getFirst().getContent());
-        assertEquals(projectMember.getWorkspaceMember().getUser().getUsername(), comments.getContent().getFirst().getAuthorUsername());
-        assertNotNull(comments.getContent().getFirst().getCreatedAt());
-        assertFalse(comments.getContent().getFirst().isEdited());    }
+        assertThrows(
+                CommentNotFoundException.class,
+                () -> commentService.updateComment(user, updateCommentRequest ,workspace.getId(), project.getId(), task.getId(), comment.getId())
+        );
+    }
 
     @Test
-    public void shouldGetEditedCommentWhenUpdatedAtIsAfterCreatedAt() {
+    public void shouldUpdateCommentWhenCommentIsFound() {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
@@ -164,18 +155,39 @@ public class GetCommentsTests extends BaseTestComment {
         when(taskRepository.findByIdAndProject(task.getId(), project))
                 .thenReturn(Optional.of(task));
 
-        comment.setUpdatedAt(LocalDateTime.now().plusHours(1));
+        when(commentRepository.findByIdAndTask(comment.getId(), task))
+                .thenReturn(Optional.of(comment));
 
-        when(commentRepository.findAllByTaskOrderByCreatedAtAsc(task, Pageable.unpaged()))
-                .thenReturn(new PageImpl<>(List.of(comment)));
+        assertNotEquals(updateCommentRequest.getContent(), comment.getContent());
 
-        Page<CommentResponse> comments = commentService.getComments(user, workspace.getId(), project.getId(), task.getId(), Pageable.unpaged());
+        commentService.updateComment(user, updateCommentRequest ,workspace.getId(), project.getId(), task.getId(), comment.getId());
 
-        assertEquals(1, comments.getTotalElements());
-        assertEquals(comment.getId(), comments.getContent().getFirst().getId());
-        assertEquals(comment.getContent(), comments.getContent().getFirst().getContent());
-        assertEquals(projectMember.getWorkspaceMember().getUser().getUsername(), comments.getContent().getFirst().getAuthorUsername());
-        assertNotNull(comments.getContent().getFirst().getCreatedAt());
-        assertTrue(comments.getContent().getFirst().isEdited());
+        assertEquals(updateCommentRequest.getContent(), comment.getContent());
+    }
+
+    @Test
+    public void shouldNotUpdateCommentWhenContentIsNull() {
+        updateCommentRequest.setContent(null);
+
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.of(workspaceMember));
+
+        when(projectRepository.findByIdAndWorkspace(project.getId(), workspace))
+                .thenReturn(Optional.of(project));
+
+        when(projectMemberRepository.existsByWorkspaceMemberAndProject(workspaceMember, project))
+                .thenReturn(true);
+
+        when(taskRepository.findByIdAndProject(task.getId(), project))
+                .thenReturn(Optional.of(task));
+
+        when(commentRepository.findByIdAndTask(comment.getId(), task))
+                .thenReturn(Optional.of(comment));
+
+        String originalContent = comment.getContent();
+
+        commentService.updateComment(user, updateCommentRequest ,workspace.getId(), project.getId(), task.getId(), comment.getId());
+
+        assertEquals(originalContent, comment.getContent());
     }
 }
