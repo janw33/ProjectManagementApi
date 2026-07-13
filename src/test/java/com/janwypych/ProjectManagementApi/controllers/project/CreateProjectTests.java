@@ -1,8 +1,8 @@
 package com.janwypych.ProjectManagementApi.controllers.project;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.project.ProjectIdResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.services.project.ProjectService;

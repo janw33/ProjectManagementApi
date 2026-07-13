@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.dtos.Project;
+package com.janwypych.ProjectManagementApi.dtos.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectIdResponse {
+public class CommentIdResponse {
     private Long id;
 }

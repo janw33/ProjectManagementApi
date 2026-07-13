@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.services.project;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.project.ProjectDetailsResponse;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;

@@ -1,6 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.project;
 
-import com.janwypych.ProjectManagementApi.dtos.Project.*;
+import com.janwypych.ProjectManagementApi.dtos.project.*;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.project.ProjectService;
 import jakarta.validation.Valid;

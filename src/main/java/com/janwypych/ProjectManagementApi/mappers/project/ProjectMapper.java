@@ -1,9 +1,9 @@
 package com.janwypych.ProjectManagementApi.mappers.project;
 
-import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectIdResponse;
-import com.janwypych.ProjectManagementApi.dtos.Project.ProjectSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.project.ProjectDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.project.ProjectIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.project.ProjectSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import org.springframework.stereotype.Component;

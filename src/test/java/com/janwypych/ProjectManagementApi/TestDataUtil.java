@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi;
 
-import com.janwypych.ProjectManagementApi.dtos.Project.CreateProjectRequest;
-import com.janwypych.ProjectManagementApi.dtos.Project.UpdateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
+import com.janwypych.ProjectManagementApi.dtos.project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
