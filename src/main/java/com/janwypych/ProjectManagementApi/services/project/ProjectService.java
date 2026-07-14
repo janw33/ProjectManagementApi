@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.services.project;
 
 import com.janwypych.ProjectManagementApi.dtos.project.*;
+import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
@@ -34,18 +35,26 @@ public class ProjectService {
         this.projectMapper = projectMapper;
     }
 
+    @Transactional
     public ProjectIdResponse createProject(User currentUser, CreateProjectRequest createProjectRequest, Long workspaceId) {
-        WorkspaceMember member = workspaceMemberRepository
+        WorkspaceMember workspaceMember = workspaceMemberRepository
                 .findByWorkspaceIdAndUser(workspaceId, currentUser)
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
 
-        Workspace workspace = member.getWorkspace();
+        Workspace workspace = workspaceMember.getWorkspace();
 
         Project project = projectMapper.toEntity(createProjectRequest, workspace);
 
-        project = projectRepository.save(project);
+        Project savedProject = projectRepository.save(project);
 
-        return projectMapper.toIdResponse(project);
+        ProjectMember projectMember = ProjectMember.builder()
+                .project(savedProject)
+                .workspaceMember(workspaceMember)
+                .build();
+
+        projectMemberRepository.save(projectMember);
+
+        return projectMapper.toIdResponse(savedProject);
     }
 
     public Page<ProjectSummaryResponse> getProjects(User currentUser, Long workspaceId, Pageable pageable) {

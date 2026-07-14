@@ -4,6 +4,7 @@ import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.ProjectIdResponse;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
+import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
@@ -107,5 +108,15 @@ public class CreateProjectTests {
         assertEquals(request.getName(), project.getName());
         assertEquals(request.getDescription(), project.getDescription());
         assertEquals(workspace, project.getWorkspace());
+
+        ArgumentCaptor<ProjectMember> projectMemberCaptor =
+                ArgumentCaptor.forClass(ProjectMember.class);
+
+        verify(projectMemberRepository).save(projectMemberCaptor.capture());
+
+        ProjectMember projectMember = projectMemberCaptor.getValue();
+
+        assertEquals(workspaceMember, projectMember.getWorkspaceMember());
+        assertEquals(savedProject, projectMember.getProject());
     }
 }

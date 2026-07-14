@@ -5,7 +5,6 @@ import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberDe
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.workspaceMember.WorkspaceMemberService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
