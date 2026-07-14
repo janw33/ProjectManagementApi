@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.BaseTest.workspaceMember;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
+import com.janwypych.ProjectManagementApi.dtos.workspaceMember.UpdateWorkspaceMemberRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
@@ -14,7 +15,7 @@ public abstract class BaseTestWorkspaceMembers {
     protected WorkspaceMember workspaceMember;
     protected WorkspaceMember workspaceMember2;
 
-
+    protected UpdateWorkspaceMemberRequest updateWorkspaceMemberRequest;
     @BeforeEach
     void setupBase() {
         user = TestDataUtil.user();
@@ -22,5 +23,7 @@ public abstract class BaseTestWorkspaceMembers {
         workspace = TestDataUtil.workspace();
         workspaceMember = TestDataUtil.workspaceMember(user, workspace);
         workspaceMember2 = TestDataUtil.workspaceMember2(user2, workspace);
+
+        updateWorkspaceMemberRequest = TestDataUtil.updateWorkspaceMemberRequest();
     }
 }

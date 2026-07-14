@@ -11,6 +11,7 @@ import com.janwypych.ProjectManagementApi.dtos.task.UpdateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.workspaceMember.UpdateWorkspaceMemberRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
@@ -126,7 +127,7 @@ public final class TestDataUtil {
                 .id(1L)
                 .user(user2)
                 .workspace(workspace)
-                .role(WorkspaceRole.MANAGER)
+                .role(WorkspaceRole.MEMBER)
                 .joinedAt(LocalDateTime.now())
                 .build();
     }
@@ -208,5 +209,9 @@ public final class TestDataUtil {
         return UpdateCommentRequest.builder()
                 .content("test1")
                 .build();
+    }
+
+    public static UpdateWorkspaceMemberRequest updateWorkspaceMemberRequest() {
+        return new UpdateWorkspaceMemberRequest(WorkspaceRole.MANAGER);
     }
 }
