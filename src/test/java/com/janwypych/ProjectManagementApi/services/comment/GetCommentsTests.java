@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.services.comment;
 
+import com.janwypych.ProjectManagementApi.BaseTest.comment.BaseTestComment;
 import com.janwypych.ProjectManagementApi.dtos.comment.CommentResponse;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;

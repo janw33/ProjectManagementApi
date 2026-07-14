@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.services.comment;
+package com.janwypych.ProjectManagementApi.BaseTest.comment;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
@@ -29,7 +29,7 @@ public abstract class BaseTestComment {
         user = TestDataUtil.user();
         workspace = TestDataUtil.workspace();
         workspaceMember = TestDataUtil.workspaceMember(user, workspace);
-        project = TestDataUtil.project();
+        project = TestDataUtil.project(workspace);
         projectMember = TestDataUtil.projectMember(workspaceMember, project);
         task = TestDataUtil.task(projectMember, project);
         comment = TestDataUtil.comment(projectMember, task);

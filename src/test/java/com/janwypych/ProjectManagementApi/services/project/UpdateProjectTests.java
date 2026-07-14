@@ -53,7 +53,7 @@ public class UpdateProjectTests {
     public void shouldThrowWorkspaceNotFoundException() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
         UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
 
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
@@ -69,7 +69,7 @@ public class UpdateProjectTests {
     public void shouldThrowProjectNotFoundException() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
         UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
 
         WorkspaceMember member = TestDataUtil.workspaceMember(user, workspace);
@@ -90,7 +90,7 @@ public class UpdateProjectTests {
     public void shouldUpdateWhenProjectIsFound() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
         UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
 
         assertNotEquals(request.getName(), project.getName());
@@ -115,7 +115,7 @@ public class UpdateProjectTests {
     public void shouldUpdateOnlyNameWhenDescriptionIsNull() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
         UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
 
         request.setDescription(null);
@@ -143,7 +143,7 @@ public class UpdateProjectTests {
     public void shouldUpdateOnlyDescriptionWhenNameIsNull() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
         UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
 
         request.setName(null);
@@ -171,7 +171,7 @@ public class UpdateProjectTests {
     public void shouldBeTheSameWhenNameAndDescriptionAreNull() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
         UpdateProjectRequest request = TestDataUtil.updateProjectRequest();
 
         request.setName(null);

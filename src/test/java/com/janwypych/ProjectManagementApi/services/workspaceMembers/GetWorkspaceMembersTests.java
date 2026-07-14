@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.services.workspaceMembers;
 
+import com.janwypych.ProjectManagementApi.BaseTest.workspaceMember.BaseTestWorkspaceMembers;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.workspaceMember.WorkspaceMemberMapper;

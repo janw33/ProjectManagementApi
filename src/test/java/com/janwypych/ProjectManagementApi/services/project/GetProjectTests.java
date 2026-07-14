@@ -54,7 +54,7 @@ public class GetProjectTests {
     public void shouldThrowWorkspaceNotFoundException() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
 
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.empty());
@@ -69,7 +69,7 @@ public class GetProjectTests {
     public void shouldThrowProjectNotFoundException() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
 
         WorkspaceMember workspaceMember = WorkspaceMember.builder()
                 .user(user)
@@ -93,7 +93,7 @@ public class GetProjectTests {
     public void shouldReturnProjectDetailsWhenProjectAndWorkspaceAreFound() {
         User user = TestDataUtil.user();
         Workspace workspace = TestDataUtil.workspace();
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
 
         WorkspaceMember workspaceMember = WorkspaceMember.builder()
                 .user(user)

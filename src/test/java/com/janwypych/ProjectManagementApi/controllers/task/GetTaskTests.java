@@ -1,6 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.task;
 
-import com.janwypych.ProjectManagementApi.services.task.BaseTestTask;
+import com.janwypych.ProjectManagementApi.BaseTest.task.BaseTestTask;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskDetailsResponse;
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.user.User;

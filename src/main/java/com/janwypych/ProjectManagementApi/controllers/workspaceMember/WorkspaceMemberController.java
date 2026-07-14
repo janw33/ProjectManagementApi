@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/workspaces/{workspaceId}/members")
+@RequestMapping("/api/v1/workspaces/{workspaceId}/members")
 public class WorkspaceMemberController {
     private final WorkspaceMemberService workspaceMemberService;
 

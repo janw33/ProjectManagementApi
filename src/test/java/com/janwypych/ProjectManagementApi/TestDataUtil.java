@@ -71,6 +71,7 @@ public final class TestDataUtil {
                 .name("test")
                 .description("test")
                 .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
     }
 
@@ -99,26 +100,30 @@ public final class TestDataUtil {
                 .build();
     }
 
-    public static Project project() {
+    public static Project project(Workspace workspace) {
         return Project.builder()
                 .id(1L)
                 .name("test")
                 .description("test")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .workspace(workspace)
                 .build();
     }
 
     public static WorkspaceMember workspaceMember(User user, Workspace workspace) {
         return WorkspaceMember.builder()
+                .id(1L)
                 .user(user)
                 .workspace(workspace)
                 .role(WorkspaceRole.OWNER)
+                .joinedAt(LocalDateTime.now())
                 .build();
     }
 
     public static WorkspaceMember workspaceMember2(User user2, Workspace workspace) {
         return WorkspaceMember.builder()
+                .id(1L)
                 .user(user2)
                 .workspace(workspace)
                 .role(WorkspaceRole.MANAGER)

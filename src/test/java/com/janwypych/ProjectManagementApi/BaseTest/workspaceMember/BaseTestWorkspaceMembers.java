@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.services.workspaceMembers;
+package com.janwypych.ProjectManagementApi.BaseTest.workspaceMember;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.entities.user.User;

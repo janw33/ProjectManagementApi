@@ -82,7 +82,7 @@ public class GetProjectsTests {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
-        Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project()));
+        Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project(workspace)));
 
         when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
@@ -113,7 +113,7 @@ public class GetProjectsTests {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
-        Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project()));
+        Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project(workspace)));
 
         when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
@@ -143,7 +143,7 @@ public class GetProjectsTests {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
-        Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project()));
+        Page<Project> projects = new PageImpl<>(List.of(TestDataUtil.project(workspace)));
 
         when(projectRepository.findAllByWorkspaceOrderByUpdatedAtDesc(workspace, Pageable.unpaged()))
                 .thenReturn(projects);
@@ -173,7 +173,7 @@ public class GetProjectsTests {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
-        Project project = TestDataUtil.project();
+        Project project = TestDataUtil.project(workspace);
 
         Page<Project> projects = new PageImpl<>(List.of(project));
 

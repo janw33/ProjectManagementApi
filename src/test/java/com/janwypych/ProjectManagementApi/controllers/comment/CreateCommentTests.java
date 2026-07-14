@@ -1,6 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.comment;
 
-import com.janwypych.ProjectManagementApi.services.comment.BaseTestComment;
+import com.janwypych.ProjectManagementApi.BaseTest.comment.BaseTestComment;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
