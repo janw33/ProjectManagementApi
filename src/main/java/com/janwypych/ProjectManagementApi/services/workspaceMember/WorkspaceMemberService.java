@@ -1,10 +1,12 @@
 package com.janwypych.ProjectManagementApi.services.workspaceMember;
 
+import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.workspaceMember.WorkspaceMemberMapper;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
 import org.springframework.data.domain.Page;
@@ -31,5 +33,18 @@ public class WorkspaceMemberService {
         Page<WorkspaceMember> members = workspaceMemberRepository.findAllByWorkspace(workspace, pageable);
 
         return members.map(workspaceMemberMapper::toSummaryResponse);
+    }
+
+    public WorkspaceMemberDetailsResponse getWorkspaceMember(User currentUser, Long workspaceId, Long memberId) {
+        WorkspaceMember currentMember = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        Workspace workspace = currentMember.getWorkspace();
+
+        WorkspaceMember workspaceMember = workspaceMemberRepository.findByIdAndWorkspace(memberId, workspace)
+                .orElseThrow(WorkspaceMemberNotFoundException::new);
+
+        return workspaceMemberMapper.toDetailsResponse(workspaceMember);
     }
 }

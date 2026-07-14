@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.workspaceMember;
 
+import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.workspaceMember.WorkspaceMemberService;
@@ -28,5 +29,14 @@ public class WorkspaceMemberController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(workspaceMemberService.getWorkspaceMembers(currentUser, workspaceId, pageable));
+    }
+
+    @GetMapping(path = "/{memberId}")
+    public ResponseEntity<WorkspaceMemberDetailsResponse> getWorkspaceMember(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("memberId") Long memberId
+    ) {
+        return ResponseEntity.ok(workspaceMemberService.getWorkspaceMember(currentUser, workspaceId, memberId));
     }
 }
