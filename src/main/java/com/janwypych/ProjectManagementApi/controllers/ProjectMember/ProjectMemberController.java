@@ -10,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/workspaces/{workspaceId}/project/{projectId}/members")
+@RequestMapping("/api/v1/workspaces/{workspaceId}/projects/{projectId}/members")
 public class ProjectMemberController {
     private final ProjectMemberService projectMemberService;
 
