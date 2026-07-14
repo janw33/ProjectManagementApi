@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.repositories.workspaceMember;
 
 import com.janwypych.ProjectManagementApi.entities.user.User;
+import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,6 @@ public interface WorkspaceMemberRepository extends JpaRepository<WorkspaceMember
     );
 
     Optional<WorkspaceMember> findByWorkspaceIdAndUser(Long workspaceId, User user);
+
+    Page<WorkspaceMember> findAllByWorkspace(Workspace workspace, Pageable pageable);
 }

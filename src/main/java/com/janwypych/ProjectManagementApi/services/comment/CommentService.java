@@ -21,7 +21,6 @@ import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository
 import com.janwypych.ProjectManagementApi.repositories.projectMember.ProjectMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.task.TaskRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
