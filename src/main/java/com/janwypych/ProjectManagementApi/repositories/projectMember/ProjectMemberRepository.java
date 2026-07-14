@@ -17,4 +17,6 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
     Optional<ProjectMember> findByWorkspaceMemberAndProject(WorkspaceMember member, Project project);
 
     boolean existsByWorkspaceMemberAndProject(WorkspaceMember workspaceMember, Project project);
+
+    boolean existsByProjectAndWorkspaceMember(Project project, WorkspaceMember memberToAdd);
 }

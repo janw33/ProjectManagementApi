@@ -7,6 +7,7 @@ import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsE
 import com.janwypych.ProjectManagementApi.exceptions.comment.CommentNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.error.ErrorResponse;
 import com.janwypych.ProjectManagementApi.exceptions.error.ValidationErrorResponse;
+import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
@@ -211,5 +212,21 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ProjectMemberAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleProjectMemberAlreadyExistsException(
+            ProjectMemberAlreadyExistsException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .error("PROJECT_MEMBER_ALREADY_EXISTS")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 }
