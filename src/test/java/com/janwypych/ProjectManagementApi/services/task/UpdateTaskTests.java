@@ -1,6 +1,5 @@
 package com.janwypych.ProjectManagementApi.services.task;
 
-import com.janwypych.ProjectManagementApi.BaseTestTask;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;

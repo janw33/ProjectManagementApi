@@ -1,8 +1,8 @@
-package com.janwypych.ProjectManagementApi;
+package com.janwypych.ProjectManagementApi.services.comment;
 
+import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.dtos.comment.UpdateCommentRequest;
-import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;

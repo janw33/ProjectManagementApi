@@ -1,6 +1,5 @@
 package com.janwypych.ProjectManagementApi.services.workspaceMembers;
 
-import com.janwypych.ProjectManagementApi.BaseTestWorkspaceMembers;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.workspaceMember.WorkspaceMemberMapper;
@@ -40,7 +39,7 @@ public class GetWorkspaceMembersTests extends BaseTestWorkspaceMembers {
     }
 
     @Test
-    public void shouldReturnWorkspaceNotFoundException() {
+    public void shouldThrowWorkspaceNotFoundException() {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.empty());
 

@@ -122,6 +122,7 @@ public final class TestDataUtil {
                 .user(user2)
                 .workspace(workspace)
                 .role(WorkspaceRole.MANAGER)
+                .joinedAt(LocalDateTime.now())
                 .build();
     }
 

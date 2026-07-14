@@ -1,6 +1,5 @@
 package com.janwypych.ProjectManagementApi.services.task;
 
-import com.janwypych.ProjectManagementApi.BaseTestTask;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskDetailsResponse;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 

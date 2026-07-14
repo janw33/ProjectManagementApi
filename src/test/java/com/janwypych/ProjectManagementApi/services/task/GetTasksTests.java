@@ -1,6 +1,5 @@
 package com.janwypych.ProjectManagementApi.services.task;
 
-import com.janwypych.ProjectManagementApi.BaseTestTask;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskSummaryResponse;
 import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;

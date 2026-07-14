@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.controllers.workspaceMembers;
 
 
-import com.janwypych.ProjectManagementApi.BaseTestWorkspaceMembers;
+import com.janwypych.ProjectManagementApi.services.workspaceMembers.BaseTestWorkspaceMembers;
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
