@@ -14,6 +14,6 @@ CREATE TABLE project_members (
         REFERENCES workspace_members(id)
         ON DELETE CASCADE,
 
-    CONSTRAINT uk_project_member
+    CONSTRAINT uk_project_members_project_workspace_member
         UNIQUE (project_id, workspace_member_id)
 );

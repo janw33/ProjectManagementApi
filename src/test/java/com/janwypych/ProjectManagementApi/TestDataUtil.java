@@ -6,6 +6,7 @@ import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.projectMember.CreateProjectMemberRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.UpdateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
@@ -213,5 +214,9 @@ public final class TestDataUtil {
 
     public static UpdateWorkspaceMemberRequest updateWorkspaceMemberRequest() {
         return new UpdateWorkspaceMemberRequest(WorkspaceRole.MANAGER);
+    }
+
+    public static CreateProjectMemberRequest createProjectMemberRequest() {
+        return new CreateProjectMemberRequest(2L);
     }
 }
