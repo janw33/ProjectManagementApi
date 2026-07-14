@@ -1,17 +1,16 @@
 package com.janwypych.ProjectManagementApi.controllers.workspaceMember;
 
+import com.janwypych.ProjectManagementApi.dtos.workspaceMember.UpdateWorkspaceMemberRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.workspaceMember.WorkspaceMemberService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/workspaces/{workspaceId}/members")
@@ -38,5 +37,16 @@ public class WorkspaceMemberController {
             @PathVariable("memberId") Long memberId
     ) {
         return ResponseEntity.ok(workspaceMemberService.getWorkspaceMember(currentUser, workspaceId, memberId));
+    }
+
+    @PatchMapping(path = "/{memberId}")
+    public ResponseEntity<Void> updateWorkspaceMember(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody UpdateWorkspaceMemberRequest request,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("memberId") Long memberId
+    ) {
+        workspaceMemberService.updateWorkspaceMember(currentUser, request, workspaceId, memberId);
+        return ResponseEntity.ok().build();
     }
 }

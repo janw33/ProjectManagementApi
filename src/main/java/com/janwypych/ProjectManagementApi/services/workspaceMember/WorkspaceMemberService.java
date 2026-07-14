@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.services.workspaceMember;
 
+import com.janwypych.ProjectManagementApi.dtos.workspaceMember.UpdateWorkspaceMemberRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.WorkspaceMemberSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
@@ -12,6 +13,7 @@ import com.janwypych.ProjectManagementApi.repositories.workspaceMember.Workspace
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WorkspaceMemberService {
@@ -46,5 +48,21 @@ public class WorkspaceMemberService {
                 .orElseThrow(WorkspaceMemberNotFoundException::new);
 
         return workspaceMemberMapper.toDetailsResponse(workspaceMember);
+    }
+
+    @Transactional
+    public void updateWorkspaceMember(User currentUser, UpdateWorkspaceMemberRequest request, Long workspaceId, Long memberId) {
+        WorkspaceMember currentMember = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        Workspace workspace = currentMember.getWorkspace();
+
+        WorkspaceMember workspaceMember = workspaceMemberRepository.findByIdAndWorkspace(memberId, workspace)
+                .orElseThrow(WorkspaceMemberNotFoundException::new);
+
+        if(request.getRole() != null) {
+            workspaceMember.setRole(request.getRole());
+        }
     }
 }
