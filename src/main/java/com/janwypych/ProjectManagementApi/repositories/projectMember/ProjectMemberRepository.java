@@ -4,6 +4,8 @@ import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +21,6 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
     boolean existsByWorkspaceMemberAndProject(WorkspaceMember workspaceMember, Project project);
 
     boolean existsByProjectAndWorkspaceMember(Project project, WorkspaceMember memberToAdd);
+
+    Page<ProjectMember> findAllByProject(Project project, Pageable pageable);
 }

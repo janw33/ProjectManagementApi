@@ -8,6 +8,7 @@ import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundExce
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberNotFoundException;
+import com.janwypych.ProjectManagementApi.mappers.projectMember.ProjectMemberMapper;
 import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository;
 import com.janwypych.ProjectManagementApi.repositories.projectMember.ProjectMemberRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateProjectMemberTests extends BaseTestProjectMember {
+    private final ProjectMemberMapper projectMemberMapper = new ProjectMemberMapper();
+
     @Mock
     private WorkspaceMemberRepository workspaceMemberRepository;
 
@@ -44,7 +47,8 @@ public class CreateProjectMemberTests extends BaseTestProjectMember {
         projectMemberService = new ProjectMemberService(
                 workspaceMemberRepository,
                 projectRepository,
-                projectMemberRepository
+                projectMemberRepository,
+                projectMemberMapper
         );
     }
 
