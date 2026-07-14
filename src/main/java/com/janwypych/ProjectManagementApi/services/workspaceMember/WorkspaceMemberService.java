@@ -24,7 +24,7 @@ public class WorkspaceMemberService {
     public Page<WorkspaceMemberSummaryResponse> getWorkspaceMembers(User currentUser, Long workspaceId, Pageable pageable) {
         WorkspaceMember member = workspaceMemberRepository
                 .findByWorkspaceIdAndUser(workspaceId, currentUser)
-                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+                .orElseThrow(WorkspaceNotFoundException::new);
 
         Workspace workspace = member.getWorkspace();
 
