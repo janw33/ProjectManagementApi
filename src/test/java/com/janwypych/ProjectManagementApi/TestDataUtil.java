@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi;
 
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.dtos.comment.UpdateCommentRequest;
+import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;
@@ -14,7 +15,9 @@ import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.workspaceMember.UpdateWorkspaceMemberRequest;
 import com.janwypych.ProjectManagementApi.entities.comment.Comment;
+import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
+import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import com.janwypych.ProjectManagementApi.entities.project.Project;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
 import com.janwypych.ProjectManagementApi.entities.task.Task;
@@ -218,5 +221,23 @@ public final class TestDataUtil {
 
     public static CreateProjectMemberRequest createProjectMemberRequest() {
         return new CreateProjectMemberRequest(2L);
+    }
+
+    public static CreateInvitationRequest createInvitationRequest() {
+        return CreateInvitationRequest.builder()
+                .receiverUserId(2L)
+                .build();
+    }
+
+    public static Invitation invitationPending(WorkspaceMember member, Workspace workspace, User user2) {
+        return Invitation.builder()
+                .id(1L)
+                .createdAt(LocalDateTime.now())
+                .status(InvitationStatus.PENDING)
+                .workspace(workspace)
+                .expiresAt(LocalDateTime.now())
+                .senderWorkspaceMember(member)
+                .receiverUser(user2)
+                .build();
     }
 }
