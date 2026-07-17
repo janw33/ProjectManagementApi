@@ -1,10 +1,8 @@
 package com.janwypych.ProjectManagementApi.services.projectMember;
 
 import com.janwypych.ProjectManagementApi.BaseTest.projectMember.BaseTestProjectMember;
-import com.janwypych.ProjectManagementApi.entities.comment.Comment;
 import com.janwypych.ProjectManagementApi.entities.projectMember.ProjectMember;
-import com.janwypych.ProjectManagementApi.entities.task.Task;
-import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberNotFoundException;

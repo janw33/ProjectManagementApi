@@ -4,7 +4,7 @@ import com.janwypych.ProjectManagementApi.BaseTest.task.BaseTestTask;
 import com.janwypych.ProjectManagementApi.dtos.task.TaskIdResponse;
 import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.task.Task;
-import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.task.TaskMapper;

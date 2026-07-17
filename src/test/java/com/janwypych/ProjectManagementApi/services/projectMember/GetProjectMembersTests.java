@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi.services.projectMember;
 
 import com.janwypych.ProjectManagementApi.BaseTest.projectMember.BaseTestProjectMember;
 import com.janwypych.ProjectManagementApi.dtos.projectMember.ProjectMemberResponse;
-import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.projectMember.ProjectMemberMapper;
 import com.janwypych.ProjectManagementApi.repositories.project.ProjectRepository;

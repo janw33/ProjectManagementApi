@@ -23,7 +23,4 @@ CREATE TABLE invitations (
     FOREIGN KEY (receiver_user_id)
     REFERENCES users(id)
     ON DELETE CASCADE,
-
-    CONSTRAINT uk_project_members_project_workspace_member
-    UNIQUE (workspace_id, receiver_user_id)
 );

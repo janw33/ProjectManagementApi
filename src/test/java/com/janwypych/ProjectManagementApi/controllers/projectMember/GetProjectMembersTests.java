@@ -3,7 +3,7 @@ package com.janwypych.ProjectManagementApi.controllers.projectMember;
 import com.janwypych.ProjectManagementApi.BaseTest.projectMember.BaseTestProjectMember;
 import com.janwypych.ProjectManagementApi.dtos.projectMember.ProjectMemberResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
-import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.services.projectMember.ProjectMemberService;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.janwypych.ProjectManagementApi.services.comment;
 
 import com.janwypych.ProjectManagementApi.BaseTest.comment.BaseTestComment;
-import com.janwypych.ProjectManagementApi.exceptions.Project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.comment.CommentNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
