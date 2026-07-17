@@ -2,8 +2,8 @@ package com.janwypych.ProjectManagementApi.services.invitation;
 
 import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
 import com.janwypych.ProjectManagementApi.dtos.invitation.InvitationIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
-import com.janwypych.ProjectManagementApi.entities.enums.TaskStatus;
 import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
@@ -16,6 +16,8 @@ import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
 import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -63,5 +65,16 @@ public class InvitationService {
         Invitation savedInvitation = invitationRepository.save(invitation);
 
         return invitationMapper.toIdResponse(savedInvitation);
+    }
+
+    public Page<SentInvitationSummaryResponse> getSentInvitations(User currentUser, Long workspaceId, Pageable pageable) {
+        WorkspaceMember senderMember = workspaceMemberRepository.findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        Workspace workspace = senderMember.getWorkspace();
+
+        Page<Invitation> invitations = invitationRepository.findAllByWorkspace(workspace, pageable);
+
+        return invitations.map(invitationMapper::toSentSummaryResponse);
     }
 }
