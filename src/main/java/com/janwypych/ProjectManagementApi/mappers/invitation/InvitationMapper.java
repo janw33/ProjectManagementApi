@@ -1,6 +1,7 @@
 package com.janwypych.ProjectManagementApi.mappers.invitation;
 
 import com.janwypych.ProjectManagementApi.dtos.invitation.InvitationIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import org.springframework.stereotype.Component;
@@ -22,4 +23,18 @@ public class InvitationMapper {
                     .expiresAt(invitation.getExpiresAt())
                     .build();
         }
+
+    public SentInvitationDetailsResponse toSentDetailsResponse(Invitation invitation) {
+        return SentInvitationDetailsResponse.builder()
+                .id(invitation.getId())
+                .senderUsername(invitation.getSenderWorkspaceMember().getUser().getUsername())
+                .senderEmail(invitation.getSenderWorkspaceMember().getUser().getEmail())
+                .senderRole(invitation.getSenderWorkspaceMember().getRole())
+                .receiverUsername(invitation.getReceiverUser().getUsername())
+                .receiverEmail(invitation.getReceiverUser().getEmail())
+                .status(invitation.getStatus())
+                .createdAt(invitation.getCreatedAt())
+                .expiresAt(invitation.getExpiresAt())
+                .build();
+    }
 }

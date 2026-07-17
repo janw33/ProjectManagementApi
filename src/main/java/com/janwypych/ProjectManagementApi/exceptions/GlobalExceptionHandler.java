@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.exceptions;
 
+import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.PendingInvitationAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
@@ -279,5 +280,21 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(InvitationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInvitationNotFoundException(
+            InvitationNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("INVITATION_NOT_FOUND")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }

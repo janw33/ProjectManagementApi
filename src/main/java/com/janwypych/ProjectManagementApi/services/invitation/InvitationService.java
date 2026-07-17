@@ -2,12 +2,14 @@ package com.janwypych.ProjectManagementApi.services.invitation;
 
 import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
 import com.janwypych.ProjectManagementApi.dtos.invitation.InvitationIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
 import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
+import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.PendingInvitationAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.user.UserNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
@@ -76,5 +78,17 @@ public class InvitationService {
         Page<Invitation> invitations = invitationRepository.findAllByWorkspace(workspace, pageable);
 
         return invitations.map(invitationMapper::toSentSummaryResponse);
+    }
+
+    public SentInvitationDetailsResponse getSentInvitation(User currentUser, Long workspaceId, Long invitationId) {
+        WorkspaceMember senderMember = workspaceMemberRepository.findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        Workspace workspace = senderMember.getWorkspace();
+
+        Invitation invitation = invitationRepository.findByIdAndWorkspace(invitationId, workspace)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        return invitationMapper.toSentDetailsResponse(invitation);
     }
 }

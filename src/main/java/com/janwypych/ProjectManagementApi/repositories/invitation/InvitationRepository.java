@@ -16,4 +16,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     Optional<Invitation> findByWorkspaceAndReceiverUserAndStatus(Workspace workspace, User receiver, InvitationStatus invitationStatus);
 
     Page<Invitation> findAllByWorkspace(Workspace workspace, Pageable pageable);
+
+    Optional<Invitation> findByIdAndWorkspace(Long invitationId, Workspace workspace);
 }
