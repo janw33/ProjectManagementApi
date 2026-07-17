@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi.mappers.user;
 
 import com.janwypych.ProjectManagementApi.dtos.auth.AuthResponse;
 import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
+import com.janwypych.ProjectManagementApi.dtos.user.UserResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +16,18 @@ public class UserMapper {
                 .build();
     }
 
-    public AuthResponse toResponse(String token) {
+    public AuthResponse toTokenResponse(String token) {
         return AuthResponse.builder()
                 .token(token)
+                .build();
+    }
+
+    public UserResponse toResponse(User currentUser) {
+        return UserResponse.builder()
+                .id(currentUser.getId())
+                .username(currentUser.getUsername())
+                .email(currentUser.getEmail())
+                .createdAt(currentUser.getCreatedAt())
                 .build();
     }
 }

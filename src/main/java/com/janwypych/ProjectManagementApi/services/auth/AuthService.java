@@ -40,7 +40,7 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         String token = jwtService.generateToken(savedUser);
-        return userMapper.toResponse(token);
+        return userMapper.toTokenResponse(token);
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
@@ -51,6 +51,6 @@ public class AuthService {
             throw new InvalidCredentialsException("Invalid email or password");
 
         String token = jwtService.generateToken(user);
-        return userMapper.toResponse(token);
+        return userMapper.toTokenResponse(token);
     }
 }
