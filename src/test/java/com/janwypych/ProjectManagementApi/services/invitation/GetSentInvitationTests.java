@@ -1,8 +1,8 @@
 package com.janwypych.ProjectManagementApi.services.invitation;
 
 import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestInvitation;
-import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationSummaryResponse;
-import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
+import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
 import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
@@ -13,18 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetSentInvitationsTests extends BaseTestInvitation {
+public class GetSentInvitationTests extends BaseTestInvitation {
     @Mock
     private UserRepository userRepository;
 
@@ -55,26 +51,42 @@ public class GetSentInvitationsTests extends BaseTestInvitation {
 
         assertThrows(
                 WorkspaceNotFoundException.class,
-                () -> invitationService.getSentInvitations(user, workspace.getId(), Pageable.unpaged())
+                () -> invitationService.getSentInvitation(user, workspace.getId(), invitation.getId())
         );
     }
 
     @Test
-    public void shouldGetInvitationsWhenWorkspaceIsFound() {
+    public void shouldThrowInvitationNotFoundException() {
         when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
                 .thenReturn(Optional.of(workspaceMember));
 
-        when(invitationRepository.findAllByWorkspace(workspace, Pageable.unpaged()))
-                .thenReturn(new PageImpl<>(List.of(invitation)));
+        when(invitationRepository.findByIdAndWorkspace(invitation.getId(), workspace))
+                .thenReturn(Optional.empty());
 
-        Page<SentInvitationSummaryResponse> sentInvitations = invitationService.getSentInvitations(user, workspace.getId(), Pageable.unpaged());
+        assertThrows(
+                InvitationNotFoundException.class,
+                () -> invitationService.getSentInvitation(user, workspace.getId(), invitation.getId())
+        );
+    }
 
-        assertEquals(1, sentInvitations.getTotalElements());
-        assertEquals(invitation.getId(), sentInvitations.getContent().getFirst().getId());
-        assertEquals(invitation.getSenderWorkspaceMember().getUser().getUsername(), sentInvitations.getContent().getFirst().getSenderUsername());
-        assertEquals(invitation.getSenderWorkspaceMember().getRole(), sentInvitations.getContent().getFirst().getSenderRole());
-        assertEquals(invitation.getReceiverUser().getUsername(), sentInvitations.getContent().getFirst().getReceiverUsername());
-        assertEquals(invitation.getStatus(), sentInvitations.getContent().getFirst().getStatus());
-        assertNotNull(sentInvitations.getContent().getFirst().getExpiresAt());
+    @Test
+    public void shouldGetInvitationWhenInvitationExists() {
+        when(workspaceMemberRepository.findByWorkspaceIdAndUser(workspace.getId(), user))
+                .thenReturn(Optional.of(workspaceMember));
+
+        when(invitationRepository.findByIdAndWorkspace(invitation.getId(), workspace))
+                .thenReturn(Optional.of(invitation));
+
+        SentInvitationDetailsResponse result = invitationService.getSentInvitation(user, workspace.getId(), invitation.getId());
+
+        assertEquals(invitation.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getSenderUsername());
+        assertEquals(user.getEmail(), result.getSenderEmail());
+        assertEquals(workspaceMember.getRole(), result.getSenderRole());
+        assertEquals(user2.getUsername(), result.getReceiverUsername());
+        assertEquals(user2.getEmail(), result.getReceiverEmail());
+        assertEquals(invitation.getStatus(), result.getStatus());
+        assertNotNull(result.getCreatedAt());
+        assertNotNull(result.getExpiresAt());
     }
 }
