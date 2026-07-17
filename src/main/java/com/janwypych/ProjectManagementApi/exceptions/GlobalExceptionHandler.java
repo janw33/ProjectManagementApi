@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.exceptions;
 
+import com.janwypych.ProjectManagementApi.exceptions.invitation.PendingInvitationAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.InvalidCredentialsException;
@@ -12,6 +13,7 @@ import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMember
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.user.UserNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.UserAlreadyWorkspaceMemberException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -245,5 +247,37 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(UserAlreadyWorkspaceMemberException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyWorkspaceMemberException(
+            UserAlreadyWorkspaceMemberException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .error("USER_ALREADY_WORKSPACE_MEMBER")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(PendingInvitationAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlePendingInvitationAlreadyExistsException(
+            PendingInvitationAlreadyExistsException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .error("PENDING_INVITATION_ALREADY_EXISTS")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 }

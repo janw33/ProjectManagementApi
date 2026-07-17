@@ -22,5 +22,5 @@ CREATE TABLE invitations (
     CONSTRAINT fk_invitations_receiver_user
     FOREIGN KEY (receiver_user_id)
     REFERENCES users(id)
-    ON DELETE CASCADE,
+    ON DELETE CASCADE
 );

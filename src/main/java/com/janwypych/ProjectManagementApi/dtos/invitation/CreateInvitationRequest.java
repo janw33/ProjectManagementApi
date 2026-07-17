@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CreateInvitationRequest {
-    @NotNull
+    @NotNull(message = "Receiver user id cannot be null")
     private Long receiverUserId;
 }
