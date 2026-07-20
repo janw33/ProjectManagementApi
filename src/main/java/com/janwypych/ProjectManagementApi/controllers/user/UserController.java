@@ -1,13 +1,13 @@
 package com.janwypych.ProjectManagementApi.controllers.user;
 
+import com.janwypych.ProjectManagementApi.dtos.user.UpdateCurrentUserRequest;
 import com.janwypych.ProjectManagementApi.dtos.user.UserResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.user.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -23,5 +23,14 @@ public class UserController {
             @AuthenticationPrincipal User currentUser
             ) {
         return ResponseEntity.ok(userService.getCurrentUser(currentUser));
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> updateCurrentUser(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody @Valid UpdateCurrentUserRequest request
+    ) {
+        userService.updateCurrentUser(currentUser, request);
+        return ResponseEntity.ok().build();
     }
 }
