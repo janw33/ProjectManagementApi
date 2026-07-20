@@ -10,6 +10,7 @@ import com.janwypych.ProjectManagementApi.dtos.auth.RegisterRequest;
 import com.janwypych.ProjectManagementApi.dtos.projectMember.CreateProjectMemberRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.CreateTaskRequest;
 import com.janwypych.ProjectManagementApi.dtos.task.UpdateTaskRequest;
+import com.janwypych.ProjectManagementApi.dtos.user.UpdateCurrentUserRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.UpdateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.dtos.workspace.WorkspaceDetailsResponse;
@@ -238,6 +239,13 @@ public final class TestDataUtil {
                 .expiresAt(LocalDateTime.now())
                 .senderWorkspaceMember(member)
                 .receiverUser(user2)
+                .build();
+    }
+
+    public static UpdateCurrentUserRequest updateCurrentUserRequest() {
+        return UpdateCurrentUserRequest.builder()
+                .username("test1")
+                .email("test1@email.com")
                 .build();
     }
 }
