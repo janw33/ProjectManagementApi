@@ -22,10 +22,6 @@ public class UpdateCurrentUserRequest {
 
     @Size(max = 100, message = "Email must be at most 100 characters long")
     @Email(message = "Email must be a valid email address")
-    @Pattern(
-            regexp = "^(?!\\s*$).+$",
-            message = "Email cannot contain only whitespace"
-    )
     private String email;
 
 }
