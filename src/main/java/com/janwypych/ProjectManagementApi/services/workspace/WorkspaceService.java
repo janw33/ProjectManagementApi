@@ -72,4 +72,13 @@ public class WorkspaceService {
 
         return workspaceMapper.toIdResponse(workspace);
     }
+
+    public void deleteWorkspace(User currentUser, Long workspaceId) {
+        WorkspaceMember member = workspaceMemberRepository.findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        workspaceRepository.delete(workspace);
+    }
 }
