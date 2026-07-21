@@ -1,6 +1,10 @@
 package com.janwypych.ProjectManagementApi.mappers.invitation;
 
-import com.janwypych.ProjectManagementApi.dtos.invitation.*;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.InvitationIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import org.springframework.stereotype.Component;

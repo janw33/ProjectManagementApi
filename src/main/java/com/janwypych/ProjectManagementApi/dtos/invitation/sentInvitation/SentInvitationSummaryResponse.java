@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.dtos.invitation;
+package com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation;
 
 import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;

@@ -2,7 +2,7 @@ package com.janwypych.ProjectManagementApi;
 
 import com.janwypych.ProjectManagementApi.dtos.comment.CreateCommentRequest;
 import com.janwypych.ProjectManagementApi.dtos.comment.UpdateCommentRequest;
-import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.CreateInvitationRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.CreateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.project.UpdateProjectRequest;
 import com.janwypych.ProjectManagementApi.dtos.auth.LoginRequest;

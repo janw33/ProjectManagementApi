@@ -1,8 +1,8 @@
-package com.janwypych.ProjectManagementApi.controllers.invitation;
+package com.janwypych.ProjectManagementApi.controllers.invitation.sentInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestInvitation;
-import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
-import com.janwypych.ProjectManagementApi.dtos.invitation.InvitationIdResponse;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestSentInvitation;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.CreateInvitationRequest;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.InvitationIdResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.PendingInvitationAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.user.UserNotFoundException;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CreateInvitationTests extends BaseTestInvitation {
+public class CreateSentInvitationTests extends BaseTestSentInvitation {
     @Autowired
     private MockMvc mockMvc;
 
@@ -58,7 +58,7 @@ public class CreateInvitationTests extends BaseTestInvitation {
         String requestJson = objectMapper.writeValueAsString(request);
 
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/workspaces/{workspaceId}/invitations", workspaceId)
+                MockMvcRequestBuilders.post("/api/v1/workspaces/{workspaceId}/sentInvitations", workspaceId)
                         .with(authenticatedUser())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -74,7 +74,7 @@ public class CreateInvitationTests extends BaseTestInvitation {
         String requestJson = objectMapper.writeValueAsString(createInvitationRequest);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/workspaces/1/invitations")
+                        MockMvcRequestBuilders.post("/api/v1/workspaces/1/sentInvitations")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                 .andExpect(

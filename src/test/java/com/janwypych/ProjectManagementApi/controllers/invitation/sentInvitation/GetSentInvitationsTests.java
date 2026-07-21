@@ -1,15 +1,17 @@
-package com.janwypych.ProjectManagementApi.controllers.invitation;
+package com.janwypych.ProjectManagementApi.controllers.invitation.sentInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestInvitation;
-import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestSentInvitation;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
 import com.janwypych.ProjectManagementApi.entities.user.User;
-import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GetSentInvitationTests extends BaseTestInvitation {
+public class GetSentInvitationsTests extends BaseTestSentInvitation {
     @Autowired
     private MockMvc mockMvc;
 
@@ -48,9 +51,9 @@ public class GetSentInvitationTests extends BaseTestInvitation {
         return authentication(createAuthentication());
     }
 
-    private void performGet(Long workspaceId, Long invitationId, ResultMatcher... matchers) throws Exception {
+    private void performGet(Long workspaceId, ResultMatcher... matchers) throws Exception {
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/workspaces/{workspaceId}/invitations/{invitationId}", workspaceId, invitationId)
+                MockMvcRequestBuilders.get("/api/v1/workspaces/{workspaceId}/sentInvitations", workspaceId)
                         .with(authenticatedUser())
         );
 
@@ -62,7 +65,7 @@ public class GetSentInvitationTests extends BaseTestInvitation {
     @Test
     public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/api/v1/workspaces/1/invitations/1"))
+                        MockMvcRequestBuilders.get("/api/v1/workspaces/1/sentInvitations"))
                 .andExpect(
                         status().isUnauthorized()
                 );
@@ -70,53 +73,39 @@ public class GetSentInvitationTests extends BaseTestInvitation {
 
     @Test
     public void shouldReturnHttp404WhenWorkspaceIsNotFound() throws Exception {
-        when(invitationService.getSentInvitation(any(User.class), eq(workspace.getId()), eq(invitation.getId())))
+        when(invitationService.getSentInvitations(any(User.class), eq(workspace.getId()), any(Pageable.class)))
                 .thenThrow(new WorkspaceNotFoundException());
 
-        performGet(workspace.getId(), invitation.getId(),
+        performGet(workspace.getId(),
                 status().isNotFound(),
                 jsonPath("$.error").value("WORKSPACE_NOT_FOUND"),
                 jsonPath("$.message").value("Workspace not found"));
     }
 
     @Test
-    public void shouldReturnHttp404WhenInvitationIsNotFound() throws Exception {
-        when(invitationService.getSentInvitation(any(User.class), eq(workspace.getId()), eq(invitation.getId())))
-                .thenThrow(new InvitationNotFoundException());
-
-        performGet(workspace.getId(), invitation.getId(),
-                status().isNotFound(),
-                jsonPath("$.error").value("INVITATION_NOT_FOUND"),
-                jsonPath("$.message").value("Invitation not found"));
-    }
-
-    @Test
     public void shouldReturnHttp200WhenRequestIsValid() throws Exception {
-        SentInvitationDetailsResponse sentInvitationDetailsResponse = SentInvitationDetailsResponse.builder()
+        SentInvitationSummaryResponse sentInvitationSummaryResponse = SentInvitationSummaryResponse.builder()
                 .id(invitation.getId())
                 .senderUsername(user.getUsername())
-                .senderEmail(user.getEmail())
                 .senderRole(workspaceMember.getRole())
                 .receiverUsername(user2.getUsername())
-                .receiverEmail(user2.getEmail())
-                .status(invitation.getStatus())
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusDays(7))
+                .status(InvitationStatus.DENIED)
+                .expiresAt(LocalDateTime.now())
                 .build();
 
-        when(invitationService.getSentInvitation(any(User.class), eq(workspace.getId()), eq(invitation.getId())))
-                .thenReturn(sentInvitationDetailsResponse);
+        when(invitationService.getSentInvitations(any(User.class), eq(workspace.getId()), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(sentInvitationSummaryResponse)));
 
-        performGet(workspace.getId(), invitation.getId(),
+        performGet(workspace.getId(),
                 status().isOk(),
-                jsonPath("$.id").value(invitation.getId()),
-                jsonPath("$.senderUsername").value(user.getUsername()),
-                jsonPath("$.senderEmail").value(user.getEmail()),
-                jsonPath("$.senderRole").value(workspaceMember.getRole().toString()),
-                jsonPath("$.receiverUsername").value(user2.getUsername()),
-                jsonPath("$.receiverEmail").value(user2.getEmail()),
-                jsonPath("$.status").value(invitation.getStatus().toString()),
-                jsonPath("$.createdAt").isNotEmpty(),
-                jsonPath("$.expiresAt").isNotEmpty());
+                jsonPath("$.content").isArray(),
+                jsonPath("$.totalElements").value(1),
+                jsonPath("$.content[0].id").value(invitation.getId()),
+                jsonPath("$.content[0].senderUsername").value(user.getUsername()),
+                jsonPath("$.content[0].senderRole").value(workspaceMember.getRole().toString()),
+                jsonPath("$.content[0].receiverUsername").value(user2.getUsername()),
+                jsonPath("$.content[0].status").value(InvitationStatus.DENIED.toString()),
+                jsonPath("$.content[0].expiresAt").isNotEmpty());
+
     }
 }

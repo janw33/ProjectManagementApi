@@ -1,11 +1,13 @@
-package com.janwypych.ProjectManagementApi.services.user;
+package com.janwypych.ProjectManagementApi.services.invitation.receivedInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
-import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestReceivedInvitation;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
-import com.janwypych.ProjectManagementApi.mappers.user.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
+import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
+import com.janwypych.ProjectManagementApi.services.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,24 +24,25 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetReceivedInvitationsTests extends BaseTestUser {
-    private final UserMapper userMapper = new UserMapper();
-
+public class GetReceivedInvitationsTests extends BaseTestReceivedInvitation {
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private WorkspaceMemberRepository workspaceMemberRepository;
 
     @Mock
     private InvitationRepository invitationRepository;
 
     private final InvitationMapper invitationMapper = new InvitationMapper();
 
-    private UserService userService;
+    private InvitationService invitationService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(
+        invitationService = new InvitationService(
                 userRepository,
-                userMapper,
+                workspaceMemberRepository,
                 invitationRepository,
                 invitationMapper
         );
@@ -50,7 +53,7 @@ public class GetReceivedInvitationsTests extends BaseTestUser {
         when(invitationRepository.findAllByReceiverUser(receiverUser, Pageable.unpaged()))
                 .thenReturn(new PageImpl<>(List.of(invitation)));
 
-        Page<ReceivedInvitationSummaryResponse> result = userService.getReceivedInvitations(receiverUser, Pageable.unpaged());
+        Page<ReceivedInvitationSummaryResponse> result = invitationService.getReceivedInvitations(receiverUser, Pageable.unpaged());
 
         ReceivedInvitationSummaryResponse first = result.getContent().getFirst();
 

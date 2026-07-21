@@ -1,13 +1,13 @@
-package com.janwypych.ProjectManagementApi.services.invitation;
+package com.janwypych.ProjectManagementApi.services.invitation.sentInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestInvitation;
-import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationSummaryResponse;
-import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestSentInvitation;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
 import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GetSentInvitationsTests extends BaseTestInvitation {
+public class GetSentInvitationsTests extends BaseTestSentInvitation {
     @Mock
     private UserRepository userRepository;
 

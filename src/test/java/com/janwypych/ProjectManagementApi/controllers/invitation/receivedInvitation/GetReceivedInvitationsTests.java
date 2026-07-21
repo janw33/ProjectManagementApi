@@ -1,8 +1,9 @@
-package com.janwypych.ProjectManagementApi.controllers.user;
+package com.janwypych.ProjectManagementApi.controllers.invitation.receivedInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
-import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestReceivedInvitation;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
+import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
 import com.janwypych.ProjectManagementApi.services.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GetReceivedInvitationsTests extends BaseTestUser {
+public class GetReceivedInvitationsTests extends BaseTestReceivedInvitation {
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private UserService userService;
+    private InvitationService invitationService;
 
     private Authentication createAuthentication() {
         return new UsernamePasswordAuthenticationToken(
@@ -49,7 +50,7 @@ public class GetReceivedInvitationsTests extends BaseTestUser {
 
     private void performGet(ResultMatcher... matchers) throws Exception {
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/account/receivedInvitations")
+                MockMvcRequestBuilders.get("/api/v1/receivedInvitations")
                         .with(authenticatedUser())
         );
 
@@ -61,7 +62,7 @@ public class GetReceivedInvitationsTests extends BaseTestUser {
     @Test
     public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/api/v1/account/receivedInvitations"))
+                        MockMvcRequestBuilders.get("/api/v1/receivedInvitations"))
                 .andExpect(
                         status().isUnauthorized()
                 );
@@ -79,7 +80,7 @@ public class GetReceivedInvitationsTests extends BaseTestUser {
                         .expiresAt(invitation.getExpiresAt())
                         .build();
 
-        when(userService.getReceivedInvitations(any(User.class), any(Pageable.class)))
+        when(invitationService.getReceivedInvitations(any(User.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(response)));
 
         performGet(

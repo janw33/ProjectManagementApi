@@ -1,14 +1,19 @@
 package com.janwypych.ProjectManagementApi.services.invitation;
 
-import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
-import com.janwypych.ProjectManagementApi.dtos.invitation.InvitationIdResponse;
-import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.CreateInvitationRequest;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.InvitationIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
+import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
 import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
+import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationAlreadyProcessedException;
+import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationExpiredException;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.PendingInvitationAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.user.UserNotFoundException;
@@ -21,6 +26,7 @@ import com.janwypych.ProjectManagementApi.repositories.workspaceMember.Workspace
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -90,5 +96,43 @@ public class InvitationService {
                 .orElseThrow(InvitationNotFoundException::new);
 
         return invitationMapper.toSentDetailsResponse(invitation);
+    }
+
+    public Page<ReceivedInvitationSummaryResponse> getReceivedInvitations(User currentUser, Pageable pageable) {
+        Page<Invitation> receivedInvitations = invitationRepository.findAllByReceiverUser(currentUser, pageable);
+        return  receivedInvitations.map(invitationMapper::toReceivedInvitationSummaryResponse);
+    }
+
+    public ReceivedInvitationDetailsResponse getReceivedInvitation(User currentUser, Long invitationId) {
+        Invitation invitation = invitationRepository.findByIdAndReceiverUser(invitationId, currentUser)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        return invitationMapper.toReceivedDetailsResponse(invitation);
+    }
+
+    @Transactional
+    public void acceptInvitation(User currentUser, Long invitationId) {
+        Invitation invitation = invitationRepository.findByIdAndReceiverUser(invitationId, currentUser)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        if (invitation.getExpiresAt().isBefore(LocalDateTime.now())) {
+            invitation.setStatus(InvitationStatus.EXPIRED);
+            throw new InvitationExpiredException();
+        }
+
+        if (invitation.getStatus() == InvitationStatus.ACCEPTED ||
+                invitation.getStatus() == InvitationStatus.DENIED) {
+            throw new InvitationAlreadyProcessedException();
+        }
+
+        invitation.setStatus(InvitationStatus.ACCEPTED);
+
+        WorkspaceMember newMember = WorkspaceMember.builder()
+                .role(WorkspaceRole.MEMBER)
+                .workspace(invitation.getWorkspace())
+                .user(currentUser)
+                .build();
+
+        workspaceMemberRepository.save(newMember);
     }
 }

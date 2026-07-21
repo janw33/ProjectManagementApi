@@ -1,47 +1,47 @@
-package com.janwypych.ProjectManagementApi.services.user;
+package com.janwypych.ProjectManagementApi.services.invitation.receivedInvitation;
 
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestReceivedInvitation;
 import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
-import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
 import com.janwypych.ProjectManagementApi.mappers.user.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
+import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
+import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
+import com.janwypych.ProjectManagementApi.services.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetReceivedInvitationTests extends BaseTestUser {
-    private final UserMapper userMapper = new UserMapper();
-
+public class GetReceivedInvitationTests extends BaseTestReceivedInvitation {
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private WorkspaceMemberRepository workspaceMemberRepository;
 
     @Mock
     private InvitationRepository invitationRepository;
 
     private final InvitationMapper invitationMapper = new InvitationMapper();
 
-    private UserService userService;
+    private InvitationService invitationService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(
+        invitationService = new InvitationService(
                 userRepository,
-                userMapper,
+                workspaceMemberRepository,
                 invitationRepository,
                 invitationMapper
         );
@@ -54,7 +54,7 @@ public class GetReceivedInvitationTests extends BaseTestUser {
 
         assertThrows(
                 InvitationNotFoundException.class,
-                () -> userService.getReceivedInvitation(receiverUser, invitation.getId())
+                () -> invitationService.getReceivedInvitation(receiverUser, invitation.getId())
         );
     }
 
@@ -63,7 +63,7 @@ public class GetReceivedInvitationTests extends BaseTestUser {
         when(invitationRepository.findByIdAndReceiverUser(invitation.getId(), receiverUser))
                 .thenReturn(Optional.of(invitation));
 
-        ReceivedInvitationDetailsResponse result = userService.getReceivedInvitation(receiverUser, invitation.getId());
+        ReceivedInvitationDetailsResponse result = invitationService.getReceivedInvitation(receiverUser, invitation.getId());
 
         assertEquals(invitation.getId(), result.getId());
         assertEquals(invitation.getStatus(), result.getStatus());

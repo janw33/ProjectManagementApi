@@ -1,9 +1,9 @@
-package com.janwypych.ProjectManagementApi.controllers.invitation;
+package com.janwypych.ProjectManagementApi.controllers.invitation.sentInvitation;
 
-import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
-import com.janwypych.ProjectManagementApi.dtos.invitation.InvitationIdResponse;
-import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationDetailsResponse;
-import com.janwypych.ProjectManagementApi.dtos.invitation.SentInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.CreateInvitationRequest;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.InvitationIdResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
 import jakarta.validation.Valid;
@@ -15,11 +15,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/workspaces/{workspaceId}/invitations")
-public class InvitationController {
+@RequestMapping("/api/v1/workspaces/{workspaceId}/sentInvitations")
+public class SentInvitationController {
     private final InvitationService invitationService;
 
-    public InvitationController(InvitationService invitationService) {
+    public SentInvitationController(InvitationService invitationService) {
         this.invitationService = invitationService;
     }
 

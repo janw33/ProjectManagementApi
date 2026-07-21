@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.dtos.invitation;
+package com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

@@ -1,9 +1,11 @@
-package com.janwypych.ProjectManagementApi.controllers.user;
+package com.janwypych.ProjectManagementApi.controllers.invitation.receivedInvitation;
 
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestReceivedInvitation;
 import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
-import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationDetailsResponse;
+import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
+import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
 import com.janwypych.ProjectManagementApi.services.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GetReceivedInvitationTests extends BaseTestUser {
+public class GetReceivedInvitationTests extends BaseTestReceivedInvitation {
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private UserService userService;
+    private InvitationService invitationService;
 
     private Authentication createAuthentication() {
         return new UsernamePasswordAuthenticationToken(
@@ -47,7 +49,7 @@ public class GetReceivedInvitationTests extends BaseTestUser {
 
     private void performGet(Long invitationId, ResultMatcher... matchers) throws Exception {
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/account/receivedInvitations/{invitationId}", invitationId)
+                MockMvcRequestBuilders.get("/api/v1/receivedInvitations/{invitationId}", invitationId)
                         .with(authenticatedUser())
         );
 
@@ -59,7 +61,7 @@ public class GetReceivedInvitationTests extends BaseTestUser {
     @Test
     public void shouldReturnHttp401WhenUserIsUnauthenticated() throws Exception {
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/api/v1/account/receivedInvitations/1"))
+                        MockMvcRequestBuilders.get("/api/v1/receivedInvitations/1"))
                 .andExpect(
                         status().isUnauthorized()
                 );
@@ -67,7 +69,7 @@ public class GetReceivedInvitationTests extends BaseTestUser {
 
     @Test
     public void shouldReturnHttp404WhenInvitationIsNotFound() throws Exception {
-       when(userService.getReceivedInvitation(any(User.class), eq(invitation.getId())))
+       when(invitationService.getReceivedInvitation(any(User.class), eq(invitation.getId())))
                .thenThrow(new InvitationNotFoundException());
 
        performGet(invitation.getId(),
@@ -90,7 +92,7 @@ public class GetReceivedInvitationTests extends BaseTestUser {
                 .expiresAt(invitation.getExpiresAt())
                 .build();
 
-        when(userService.getReceivedInvitation(any(User.class), eq(invitation.getId())))
+        when(invitationService.getReceivedInvitation(any(User.class), eq(invitation.getId())))
                 .thenReturn(response);
 
         performGet(invitation.getId(),

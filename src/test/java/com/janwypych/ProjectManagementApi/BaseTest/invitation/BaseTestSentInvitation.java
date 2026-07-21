@@ -1,14 +1,14 @@
 package com.janwypych.ProjectManagementApi.BaseTest.invitation;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.invitation.CreateInvitationRequest;
+import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.CreateInvitationRequest;
 import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import org.junit.jupiter.api.BeforeEach;
 
-public abstract class BaseTestInvitation {
+public abstract class BaseTestSentInvitation {
     protected User user;
     protected User user2;
     protected Workspace workspace;

@@ -41,7 +41,7 @@ public class UpdateCurrentUserTests extends BaseTestUser {
 
     private Authentication createAuthentication() {
         return new UsernamePasswordAuthenticationToken(
-                receiverUser,
+                user,
                 null,
                 null
         );

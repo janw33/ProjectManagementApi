@@ -33,7 +33,7 @@ public class GetCurrentUserTests extends BaseTestUser {
 
     private Authentication createAuthentication() {
         return new UsernamePasswordAuthenticationToken(
-                receiverUser,
+                user,
                 null,
                 null
         );
@@ -66,10 +66,10 @@ public class GetCurrentUserTests extends BaseTestUser {
     @Test
     public void shouldReturn200WhenRequestIsValid() throws Exception {
         UserResponse userResponse = UserResponse.builder()
-                .id(receiverUser.getId())
-                .username(receiverUser.getUsername())
-                .email(receiverUser.getEmail())
-                .createdAt(receiverUser.getCreatedAt())
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .createdAt(user.getCreatedAt())
                 .build();
 
         when(userService.getCurrentUser(any(User.class)))
@@ -77,9 +77,9 @@ public class GetCurrentUserTests extends BaseTestUser {
 
         performGet(
                 status().isOk(),
-                jsonPath("$.id").value(receiverUser.getId()),
-                jsonPath("$.username").value(receiverUser.getUsername()),
-                jsonPath("$.email").value(receiverUser.getEmail()),
+                jsonPath("$.id").value(user.getId()),
+                jsonPath("$.username").value(user.getUsername()),
+                jsonPath("$.email").value(user.getEmail()),
                 jsonPath("$.createdAt").isNotEmpty());
     }
 }

@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.dtos.invitation;
+package com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation;
 
 import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
 import com.janwypych.ProjectManagementApi.entities.enums.WorkspaceRole;
@@ -13,13 +13,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReceivedInvitationSummaryResponse {
+public class ReceivedInvitationDetailsResponse {
     private Long id;
     private InvitationStatus status;
     private String workspaceName;
+    private String workspaceDescription;
     private String senderUsername;
+    private String senderEmail;
     private WorkspaceRole senderRole;
+    private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
-
 }
-

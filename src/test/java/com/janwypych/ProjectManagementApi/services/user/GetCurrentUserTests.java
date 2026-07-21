@@ -2,9 +2,7 @@ package com.janwypych.ProjectManagementApi.services.user;
 
 import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
 import com.janwypych.ProjectManagementApi.dtos.user.UserResponse;
-import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
 import com.janwypych.ProjectManagementApi.mappers.user.UserMapper;
-import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,31 +20,22 @@ public class GetCurrentUserTests extends BaseTestUser {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private InvitationRepository invitationRepository;
-
-    @Mock
-    private InvitationMapper invitationMapper;
-
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         userService = new UserService(
                 userRepository,
-                userMapper,
-                invitationRepository,
-                invitationMapper
+                userMapper
         );
     }
-
     @Test
     public void shouldGetCurrentUser() {
-        UserResponse result = userService.getCurrentUser(receiverUser);
+        UserResponse result = userService.getCurrentUser(user);
 
-        assertEquals(receiverUser.getId(), result.getId());
-        assertEquals(receiverUser.getUsername(), result.getUsername());
-        assertEquals(receiverUser.getEmail(), result.getEmail());
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getUsername());
+        assertEquals(user.getEmail(), result.getEmail());
         assertNotNull(result.getCreatedAt());
     }
 }
