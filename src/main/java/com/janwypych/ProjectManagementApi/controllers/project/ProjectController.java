@@ -56,4 +56,14 @@ public class ProjectController {
     ) {
         return ResponseEntity.ok(projectService.updateProject(currentUser, request, workspaceId, projectId));
     }
+
+    @DeleteMapping(path = "/{projectId}")
+    public ResponseEntity<Void> deleteProject(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId
+    ) {
+        projectService.deleteProject(currentUser, workspaceId, projectId);
+        return ResponseEntity.noContent().build();
+    }
 }

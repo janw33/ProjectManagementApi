@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.controllers.ProjectMember;
+package com.janwypych.ProjectManagementApi.controllers.projectMember;
 
 import com.janwypych.ProjectManagementApi.dtos.projectMember.CreateProjectMemberRequest;
 import com.janwypych.ProjectManagementApi.dtos.projectMember.ProjectMemberResponse;

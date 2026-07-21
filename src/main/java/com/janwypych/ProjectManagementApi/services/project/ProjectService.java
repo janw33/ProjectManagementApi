@@ -118,4 +118,17 @@ public class ProjectService {
 
         return projectMapper.toIdResponse(project);
     }
+
+    public void deleteProject(User currentUser, Long workspaceId, Long projectId) {
+        WorkspaceMember member = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        projectRepository.delete(project);
+    }
 }
