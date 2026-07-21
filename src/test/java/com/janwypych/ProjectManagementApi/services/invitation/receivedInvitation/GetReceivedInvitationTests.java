@@ -1,16 +1,13 @@
 package com.janwypych.ProjectManagementApi.services.invitation.receivedInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestReceivedInvitation;
-import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.receivedInvitation.BaseTestReceivedInvitation;
 import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
-import com.janwypych.ProjectManagementApi.mappers.user.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
 import com.janwypych.ProjectManagementApi.repositories.workspaceMember.WorkspaceMemberRepository;
 import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
-import com.janwypych.ProjectManagementApi.services.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

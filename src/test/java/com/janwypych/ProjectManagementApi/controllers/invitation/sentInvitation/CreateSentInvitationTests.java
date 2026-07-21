@@ -1,6 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.invitation.sentInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestSentInvitation;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.sentInvitation.BaseTestSentInvitation;
 import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.CreateInvitationRequest;
 import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.InvitationIdResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;

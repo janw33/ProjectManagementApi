@@ -1,6 +1,6 @@
 package com.janwypych.ProjectManagementApi.services.invitation.sentInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestSentInvitation;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.sentInvitation.BaseTestSentInvitation;
 import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.SentInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;

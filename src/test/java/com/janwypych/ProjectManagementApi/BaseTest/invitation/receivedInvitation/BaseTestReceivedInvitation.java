@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.BaseTest.invitation;
+package com.janwypych.ProjectManagementApi.BaseTest.invitation.receivedInvitation;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
@@ -12,6 +12,7 @@ public class BaseTestReceivedInvitation {
     protected User senderUser;
     protected Workspace workspace;
     protected WorkspaceMember senderWorkspaceMember;
+    protected WorkspaceMember receiverWorkspaceMember;
     protected Invitation invitation;
 
     @BeforeEach
@@ -20,6 +21,7 @@ public class BaseTestReceivedInvitation {
         senderUser = TestDataUtil.user2();
         workspace = TestDataUtil.workspace();
         senderWorkspaceMember = TestDataUtil.workspaceMember(senderUser, workspace);
+        receiverWorkspaceMember = TestDataUtil.workspaceMember2(receiverUser, workspace);
         invitation = TestDataUtil.invitationPending(senderWorkspaceMember, workspace, receiverUser);
     }
 }

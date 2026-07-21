@@ -236,7 +236,7 @@ public final class TestDataUtil {
                 .createdAt(LocalDateTime.now())
                 .status(InvitationStatus.PENDING)
                 .workspace(workspace)
-                .expiresAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusMinutes(1))
                 .senderWorkspaceMember(member)
                 .receiverUser(user2)
                 .build();

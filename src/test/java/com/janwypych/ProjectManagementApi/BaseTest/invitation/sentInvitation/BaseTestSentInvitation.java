@@ -1,4 +1,4 @@
-package com.janwypych.ProjectManagementApi.BaseTest.invitation;
+package com.janwypych.ProjectManagementApi.BaseTest.invitation.sentInvitation;
 
 import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.invitation.sentInvitation.CreateInvitationRequest;

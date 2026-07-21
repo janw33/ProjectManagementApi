@@ -1,12 +1,10 @@
 package com.janwypych.ProjectManagementApi.controllers.invitation.receivedInvitation;
 
-import com.janwypych.ProjectManagementApi.BaseTest.invitation.BaseTestReceivedInvitation;
-import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
+import com.janwypych.ProjectManagementApi.BaseTest.invitation.receivedInvitation.BaseTestReceivedInvitation;
 import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
-import com.janwypych.ProjectManagementApi.services.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
