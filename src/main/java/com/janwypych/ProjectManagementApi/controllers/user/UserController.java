@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.controllers.user;
 
+import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.dtos.user.UpdateCurrentUserRequest;
 import com.janwypych.ProjectManagementApi.dtos.user.UserResponse;
@@ -43,6 +44,14 @@ public class UserController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(userService.getReceivedInvitations(currentUser, pageable));
+    }
+
+    @GetMapping("/receivedInvitations/{invitaitonId}")
+    public ResponseEntity<ReceivedInvitationDetailsResponse> getReceivedInvitation(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("invitationId") Long invitationId
+    ) {
+        return ResponseEntity.ok(userService.getReceivedInvitation(currentUser, invitationId));
     }
 
 }

@@ -86,10 +86,10 @@ public class GetReceivedInvitationsTests extends BaseTestUser {
                 status().isOk(),
                 jsonPath("$.totalElements").value(1),
                 jsonPath("$.content[0].id").value(invitation.getId()),
-                jsonPath("$.content[0].status").value(invitation.getStatus().name()),
+                jsonPath("$.content[0].status").value(invitation.getStatus().toString()),
                 jsonPath("$.content[0].workspaceName").value(workspace.getName()),
                 jsonPath("$.content[0].senderUsername").value(senderWorkspaceMember.getUser().getUsername()),
-                jsonPath("$.content[0].senderRole").value(senderWorkspaceMember.getRole().name()),
+                jsonPath("$.content[0].senderRole").value(senderWorkspaceMember.getRole().toString()),
                 jsonPath("$.content[0].expiresAt").isNotEmpty());
     }
 }

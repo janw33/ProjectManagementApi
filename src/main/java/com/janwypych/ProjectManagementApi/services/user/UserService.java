@@ -1,5 +1,6 @@
 package com.janwypych.ProjectManagementApi.services.user;
 
+import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.invitation.ReceivedInvitationSummaryResponse;
 import com.janwypych.ProjectManagementApi.dtos.user.UpdateCurrentUserRequest;
 import com.janwypych.ProjectManagementApi.dtos.user.UserResponse;
@@ -7,6 +8,7 @@ import com.janwypych.ProjectManagementApi.entities.invitation.Invitation;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsException;
+import com.janwypych.ProjectManagementApi.exceptions.invitation.InvitationNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
 import com.janwypych.ProjectManagementApi.mappers.user.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
@@ -58,5 +60,12 @@ public class UserService {
     public Page<ReceivedInvitationSummaryResponse> getReceivedInvitations(User currentUser, Pageable pageable) {
         Page<Invitation> receivedInvitations = invitationRepository.findAllByReceiverUser(currentUser, pageable);
         return  receivedInvitations.map(invitationMapper::toReceivedInvitationSummaryResponse);
+    }
+
+    public ReceivedInvitationDetailsResponse getReceivedInvitation(User currentUser, Long invitationId) {
+        Invitation invitation = invitationRepository.findByIdAndReceiverUser(currentUser, invitationId)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        return invitationMapper.toReceivedDetailsResponse(invitation);
     }
 }
