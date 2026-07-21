@@ -231,9 +231,7 @@ public class UpdateProjectTests {
         when(projectService.updateProject(any(User.class), eq(request), eq(workspaceId), eq(projectId)))
                 .thenReturn(projectIdResponse);
 
-        performUpdate(workspaceId,
-                projectId,
-                request,
+        performUpdate(workspaceId, projectId, request,
                 status().isOk(),
                 jsonPath("$.id").value(1L));
     }
