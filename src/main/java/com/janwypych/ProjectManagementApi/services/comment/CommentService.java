@@ -112,4 +112,23 @@ public class CommentService {
             comment.setContent(request.getContent());
         }
     }
+
+    public void deleteComment(User currentUser, Long workspaceId, Long projectId, Long taskId, Long commentId) {
+        WorkspaceMember workspaceMember = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = workspaceMember.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        Task task = taskRepository.findByIdAndProject(taskId, project)
+                .orElseThrow(TaskNotFoundException::new);
+
+        Comment comment = commentRepository.findByIdAndTask(commentId, task)
+                .orElseThrow(CommentNotFoundException::new);
+
+        commentRepository.delete(comment);
+    }
 }
