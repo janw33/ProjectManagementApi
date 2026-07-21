@@ -63,7 +63,7 @@ public class UserService {
     }
 
     public ReceivedInvitationDetailsResponse getReceivedInvitation(User currentUser, Long invitationId) {
-        Invitation invitation = invitationRepository.findByIdAndReceiverUser(currentUser, invitationId)
+        Invitation invitation = invitationRepository.findByIdAndReceiverUser(invitationId, currentUser)
                 .orElseThrow(InvitationNotFoundException::new);
 
         return invitationMapper.toReceivedDetailsResponse(invitation);
