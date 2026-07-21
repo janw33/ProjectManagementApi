@@ -46,7 +46,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getReceivedInvitations(currentUser, pageable));
     }
 
-    @GetMapping("/receivedInvitations/{invitaitonId}")
+    @GetMapping("/receivedInvitations/{invitationId}")
     public ResponseEntity<ReceivedInvitationDetailsResponse> getReceivedInvitation(
             @AuthenticationPrincipal User currentUser,
             @PathVariable("invitationId") Long invitationId
