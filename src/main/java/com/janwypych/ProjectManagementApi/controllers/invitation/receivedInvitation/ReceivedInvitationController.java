@@ -2,6 +2,7 @@ package com.janwypych.ProjectManagementApi.controllers.invitation.receivedInvita
 
 import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationDetailsResponse;
 import com.janwypych.ProjectManagementApi.dtos.invitation.receivedInvitation.ReceivedInvitationSummaryResponse;
+import com.janwypych.ProjectManagementApi.entities.enums.InvitationStatus;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.invitation.InvitationService;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,15 @@ public class ReceivedInvitationController {
             @PathVariable("invitationId") Long invitationId
     ) {
         invitationService.acceptInvitation(currentUser, invitationId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{invitationId}/decline")
+    public ResponseEntity<Void> declineInvitation(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("invitationId") Long invitationId
+    ) {
+        invitationService.declineInvitation(currentUser, invitationId);
         return ResponseEntity.ok().build();
     }
 }

@@ -135,4 +135,22 @@ public class InvitationService {
 
         workspaceMemberRepository.save(newMember);
     }
+
+    @Transactional
+    public void declineInvitation(User currentUser, Long invitationId) {
+        Invitation invitation = invitationRepository.findByIdAndReceiverUser(invitationId, currentUser)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        if (invitation.getExpiresAt().isBefore(LocalDateTime.now())) {
+            invitation.setStatus(InvitationStatus.EXPIRED);
+            throw new InvitationExpiredException();
+        }
+
+        if (invitation.getStatus() == InvitationStatus.ACCEPTED ||
+                invitation.getStatus() == InvitationStatus.DENIED) {
+            throw new InvitationAlreadyProcessedException();
+        }
+
+        invitation.setStatus(InvitationStatus.DENIED);
+    }
 }
