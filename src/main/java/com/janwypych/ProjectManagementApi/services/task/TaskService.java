@@ -124,4 +124,20 @@ public class TaskService {
 
         return taskMapper.toIdResponse(task);
     }
+
+    public void deleteTask(User currentUser, Long workspaceId, Long projectId, Long taskId) {
+        WorkspaceMember member = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace not found"));
+
+        Workspace workspace = member.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        Task task = taskRepository.findByIdAndProject(taskId, project)
+                .orElseThrow(TaskNotFoundException::new);
+
+        taskRepository.delete(task);
+    }
 }

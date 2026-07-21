@@ -60,4 +60,15 @@ public class TaskController {
     ) {
         return ResponseEntity.ok(taskService.updateTask(currentUser, updateTaskRequest, workspaceId, projectId, taskId));
     }
+
+    @DeleteMapping(path = "/{taskId}")
+    public ResponseEntity<Void> deleteTask(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("taskId") Long taskId
+    ) {
+        taskService.deleteTask(currentUser, workspaceId, projectId, taskId);
+        return ResponseEntity.noContent().build();
+    }
 }

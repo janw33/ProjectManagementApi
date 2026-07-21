@@ -17,5 +17,4 @@ CREATE TABLE tasks (
     CONSTRAINT fk_tasks_assignee
         FOREIGN KEY (assignee_project_member_id)
         REFERENCES project_members(id)
-        ON DELETE SET NULL
 );
