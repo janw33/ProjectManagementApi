@@ -1,15 +1,11 @@
 package com.janwypych.ProjectManagementApi.controllers.user;
 
 import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
-import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.user.UpdateCurrentUserRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsException;
-import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.services.user.UserService;
-import com.janwypych.ProjectManagementApi.services.workspace.WorkspaceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,7 +41,7 @@ public class UpdateCurrentUserTests extends BaseTestUser {
 
     private Authentication createAuthentication() {
         return new UsernamePasswordAuthenticationToken(
-                user,
+                receiverUser,
                 null,
                 null
         );

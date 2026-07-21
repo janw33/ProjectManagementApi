@@ -4,7 +4,9 @@ import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsException;
+import com.janwypych.ProjectManagementApi.mappers.invitation.InvitationMapper;
 import com.janwypych.ProjectManagementApi.mappers.user.UserMapper;
+import com.janwypych.ProjectManagementApi.repositories.invitation.InvitationRepository;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,13 +24,21 @@ public class UpdateCurrentUserTests extends BaseTestUser {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private InvitationRepository invitationRepository;
+
+    @Mock
+    private InvitationMapper invitationMapper;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         userService = new UserService(
                 userRepository,
-                userMapper
+                userMapper,
+                invitationRepository,
+                invitationMapper
         );
     }
 
@@ -39,7 +49,7 @@ public class UpdateCurrentUserTests extends BaseTestUser {
 
         assertThrows(
                 UsernameAlreadyExistsException.class,
-                () -> userService.updateCurrentUser(user, updateCurrentUserRequest)
+                () -> userService.updateCurrentUser(receiverUser, updateCurrentUserRequest)
         );
 
         verify(userRepository, never()).save(any(User.class));
@@ -55,7 +65,7 @@ public class UpdateCurrentUserTests extends BaseTestUser {
 
         assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> userService.updateCurrentUser(user, updateCurrentUserRequest)
+                () -> userService.updateCurrentUser(receiverUser, updateCurrentUserRequest)
         );
 
         verify(userRepository, never()).save(any(User.class));
@@ -69,70 +79,70 @@ public class UpdateCurrentUserTests extends BaseTestUser {
         when(userRepository.existsByEmail(updateCurrentUserRequest.getEmail()))
                 .thenReturn(false);
 
-        assertNotEquals(updateCurrentUserRequest.getUsername(), user.getUsername());
-        assertNotEquals(updateCurrentUserRequest.getEmail(), user.getEmail());
+        assertNotEquals(updateCurrentUserRequest.getUsername(), receiverUser.getUsername());
+        assertNotEquals(updateCurrentUserRequest.getEmail(), receiverUser.getEmail());
 
-        userService.updateCurrentUser(user, updateCurrentUserRequest);
+        userService.updateCurrentUser(receiverUser, updateCurrentUserRequest);
 
-        assertEquals(updateCurrentUserRequest.getUsername(), user.getUsername());
-        assertEquals(updateCurrentUserRequest.getEmail(), user.getEmail());
+        assertEquals(updateCurrentUserRequest.getUsername(), receiverUser.getUsername());
+        assertEquals(updateCurrentUserRequest.getEmail(), receiverUser.getEmail());
 
 
-        verify(userRepository).save(user);
+        verify(userRepository).save(receiverUser);
     }
 
     @Test
     public void shouldUpdateOnlyNameWhenEmailIsNull() {
-        String originalEmail = user.getEmail();
+        String originalEmail = receiverUser.getEmail();
         updateCurrentUserRequest.setEmail(null);
 
         when(userRepository.existsByUsername(updateCurrentUserRequest.getUsername()))
                 .thenReturn(false);
 
-        assertNotEquals(updateCurrentUserRequest.getUsername(), user.getUsername());
+        assertNotEquals(updateCurrentUserRequest.getUsername(), receiverUser.getUsername());
 
-        userService.updateCurrentUser(user, updateCurrentUserRequest);
+        userService.updateCurrentUser(receiverUser, updateCurrentUserRequest);
 
-        assertEquals(updateCurrentUserRequest.getUsername(), user.getUsername());
-        assertEquals(originalEmail, user.getEmail());
+        assertEquals(updateCurrentUserRequest.getUsername(), receiverUser.getUsername());
+        assertEquals(originalEmail, receiverUser.getEmail());
 
 
-        verify(userRepository).save(user);
+        verify(userRepository).save(receiverUser);
     }
 
     @Test
     public void shouldUpdateOnlyEmailWhenUsernameIsNull() {
-        String originalUsername = user.getUsername();
+        String originalUsername = receiverUser.getUsername();
         updateCurrentUserRequest.setUsername(null);
 
         when(userRepository.existsByEmail(updateCurrentUserRequest.getEmail()))
                 .thenReturn(false);
 
-        assertNotEquals(updateCurrentUserRequest.getEmail(), user.getEmail());
+        assertNotEquals(updateCurrentUserRequest.getEmail(), receiverUser.getEmail());
 
-        userService.updateCurrentUser(user, updateCurrentUserRequest);
+        userService.updateCurrentUser(receiverUser, updateCurrentUserRequest);
 
-        assertEquals(originalUsername, user.getUsername());
-        assertEquals(updateCurrentUserRequest.getEmail(), user.getEmail());
+        assertEquals(originalUsername, receiverUser.getUsername());
+        assertEquals(updateCurrentUserRequest.getEmail(), receiverUser.getEmail());
 
 
-        verify(userRepository).save(user);
+        verify(userRepository).save(receiverUser);
     }
 
     @Test
     public void shouldNotModifyUserWhenRequestIsEmpty() {
-        String originalUsername = user.getUsername();
-        String originalEmail = user.getEmail();
+        String originalUsername = receiverUser.getUsername();
+        String originalEmail = receiverUser.getEmail();
 
         updateCurrentUserRequest.setUsername(null);
         updateCurrentUserRequest.setEmail(null);
 
-        userService.updateCurrentUser(user, updateCurrentUserRequest);
+        userService.updateCurrentUser(receiverUser, updateCurrentUserRequest);
 
-        assertEquals(originalUsername, user.getUsername());
-        assertEquals(originalEmail, user.getEmail());
+        assertEquals(originalUsername, receiverUser.getUsername());
+        assertEquals(originalEmail, receiverUser.getEmail());
 
 
-        verify(userRepository).save(user);
+        verify(userRepository).save(receiverUser);
     }
 }

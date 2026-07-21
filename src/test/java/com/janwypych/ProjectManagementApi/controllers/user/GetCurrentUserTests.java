@@ -1,11 +1,9 @@
 package com.janwypych.ProjectManagementApi.controllers.user;
 
 import com.janwypych.ProjectManagementApi.BaseTest.user.BaseTestUser;
-import com.janwypych.ProjectManagementApi.TestDataUtil;
 import com.janwypych.ProjectManagementApi.dtos.user.UserResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.services.user.UserService;
-import com.janwypych.ProjectManagementApi.services.workspace.WorkspaceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +33,7 @@ public class GetCurrentUserTests extends BaseTestUser {
 
     private Authentication createAuthentication() {
         return new UsernamePasswordAuthenticationToken(
-                user,
+                receiverUser,
                 null,
                 null
         );
@@ -68,10 +66,10 @@ public class GetCurrentUserTests extends BaseTestUser {
     @Test
     public void shouldReturn200WhenRequestIsValid() throws Exception {
         UserResponse userResponse = UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .createdAt(user.getCreatedAt())
+                .id(receiverUser.getId())
+                .username(receiverUser.getUsername())
+                .email(receiverUser.getEmail())
+                .createdAt(receiverUser.getCreatedAt())
                 .build();
 
         when(userService.getCurrentUser(any(User.class)))
@@ -79,9 +77,9 @@ public class GetCurrentUserTests extends BaseTestUser {
 
         performGet(
                 status().isOk(),
-                jsonPath("$.id").value(user.getId()),
-                jsonPath("$.username").value(user.getUsername()),
-                jsonPath("$.email").value(user.getEmail()),
+                jsonPath("$.id").value(receiverUser.getId()),
+                jsonPath("$.username").value(receiverUser.getUsername()),
+                jsonPath("$.email").value(receiverUser.getEmail()),
                 jsonPath("$.createdAt").isNotEmpty());
     }
 }
