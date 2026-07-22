@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetSentSentInvitationTests extends BaseTestSentInvitation {
+public class GetSentInvitationTests extends BaseTestSentInvitation {
     @Mock
     private UserRepository userRepository;
 

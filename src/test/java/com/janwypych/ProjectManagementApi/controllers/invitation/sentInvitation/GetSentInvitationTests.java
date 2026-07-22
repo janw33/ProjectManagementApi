@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GetSentSentInvitationTests extends BaseTestSentInvitation {
+public class GetSentInvitationTests extends BaseTestSentInvitation {
     @Autowired
     private MockMvc mockMvc;
 
