@@ -15,6 +15,7 @@ import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMember
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.user.UserAlreadyDeletedException;
 import com.janwypych.ProjectManagementApi.exceptions.user.UserNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.UserAlreadyWorkspaceMemberException;
@@ -358,6 +359,22 @@ public class GlobalExceptionHandler {
         ErrorResponse error = ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .error("WORKSPACE_MEMBER_ALREADY_DELETED")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(UserAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyDeletedException(
+            UserAlreadyDeletedException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .error("USER_ALREADY_DELETED")
                 .message(exception.getMessage())
                 .path(request.getRequestURI())
                 .timestamp(LocalDateTime.now())

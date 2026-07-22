@@ -5,6 +5,7 @@ import com.janwypych.ProjectManagementApi.dtos.user.UserResponse;
 import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.exceptions.auth.EmailAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsException;
+import com.janwypych.ProjectManagementApi.exceptions.user.UserAlreadyDeletedException;
 import com.janwypych.ProjectManagementApi.mappers.user.UserMapper;
 import com.janwypych.ProjectManagementApi.repositories.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,15 @@ public class UserService {
         if (request.getEmail() != null) {
             currentUser.setEmail(request.getEmail());
         }
+
+        userRepository.save(currentUser);
+    }
+
+    public void deleteCurrentUser(User currentUser) {
+        if(!currentUser.isActive())
+            throw new UserAlreadyDeletedException();
+
+        currentUser.setActive(false);
 
         userRepository.save(currentUser);
     }

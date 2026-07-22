@@ -33,4 +33,12 @@ public class UserController {
         userService.updateCurrentUser(currentUser, request);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCurrentUser(
+            @AuthenticationPrincipal User currentUser
+    ) {
+        userService.deleteCurrentUser(currentUser);
+        return ResponseEntity.noContent().build();
+    }
 }
