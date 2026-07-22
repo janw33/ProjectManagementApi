@@ -49,4 +49,14 @@ public class SentInvitationController {
     ) {
         return ResponseEntity.ok(invitationService.getSentInvitation(currentUser, workspaceId, invitationId));
     }
+
+    @DeleteMapping("/{invitationId}")
+    public ResponseEntity<Void> deleteSentInvitation(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("invitationId") Long invitationId
+    ) {
+        invitationService.deleteSentInvitation(currentUser, workspaceId, invitationId);
+        return ResponseEntity.noContent().build();
+    }
 }

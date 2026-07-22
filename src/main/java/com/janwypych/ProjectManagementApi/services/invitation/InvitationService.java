@@ -153,4 +153,19 @@ public class InvitationService {
 
         invitation.setStatus(InvitationStatus.DENIED);
     }
+
+    public void deleteSentInvitation(User currentUser, Long workspaceId, Long invitationId) {
+        WorkspaceMember senderMember = workspaceMemberRepository.findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        Workspace workspace = senderMember.getWorkspace();
+
+        Invitation invitation = invitationRepository.findByIdAndWorkspace(invitationId, workspace)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        if (invitation.getStatus() != InvitationStatus.PENDING) {
+            throw new InvitationAlreadyProcessedException();
+        }
+        invitationRepository.delete(invitation);
+    }
 }
