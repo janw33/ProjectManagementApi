@@ -124,6 +124,7 @@ public final class TestDataUtil {
                 .workspace(workspace)
                 .role(WorkspaceRole.OWNER)
                 .joinedAt(LocalDateTime.now())
+                .active(true)
                 .build();
     }
 
@@ -134,6 +135,7 @@ public final class TestDataUtil {
                 .workspace(workspace)
                 .role(WorkspaceRole.MEMBER)
                 .joinedAt(LocalDateTime.now())
+                .active(true)
                 .build();
     }
 
