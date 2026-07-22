@@ -1,19 +1,15 @@
 package com.janwypych.ProjectManagementApi.controllers.workspaceMembers;
 
 import com.janwypych.ProjectManagementApi.BaseTest.workspaceMember.BaseTestWorkspaceMembers;
-import com.janwypych.ProjectManagementApi.TestDataUtil;
-import com.janwypych.ProjectManagementApi.dtos.workspace.CreateWorkspaceRequest;
-import com.janwypych.ProjectManagementApi.dtos.workspaceMember.UpdateWorkspaceMemberRequest;
 import com.janwypych.ProjectManagementApi.entities.user.User;
-import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberAlreadyDeletedException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.services.workspaceMember.WorkspaceMemberService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -21,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import tools.jackson.databind.ObjectMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,12 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UpdateWorkspaceMemberTests extends BaseTestWorkspaceMembers {
+public class DeleteWorkspaceMemberTests extends BaseTestWorkspaceMembers {
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockitoBean
     private WorkspaceMemberService workspaceMemberService;
@@ -54,14 +46,10 @@ public class UpdateWorkspaceMemberTests extends BaseTestWorkspaceMembers {
         return authentication(createAuthentication());
     }
 
-    private void performUpdate(Long workspaceId, Long memberId, UpdateWorkspaceMemberRequest request, ResultMatcher... matchers) throws Exception {
-        String requestJson = objectMapper.writeValueAsString(request);
-
+    private void performDelete(Long workspaceId, Long memberId, ResultMatcher... matchers) throws Exception {
         var result = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/api/v1/workspaces/{workspaceId}/members/{memberId}", workspaceId, memberId)
+                MockMvcRequestBuilders.delete("/api/v1/workspaces/{workspaceId}/members/{memberId}", workspaceId, memberId)
                         .with(authenticatedUser())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson)
         );
 
         for (ResultMatcher matcher : matchers) {
@@ -71,12 +59,8 @@ public class UpdateWorkspaceMemberTests extends BaseTestWorkspaceMembers {
 
     @Test
     public void shouldReturn401WhenUserIsUnauthenticated() throws Exception {
-        String requestJson = objectMapper.writeValueAsString(updateWorkspaceMemberRequest);
-
         mockMvc.perform(
-                        MockMvcRequestBuilders.patch("/api/v1/workspaces/1/members/1")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(requestJson))
+                        MockMvcRequestBuilders.delete("/api/v1/workspaces/1/members/1"))
                 .andExpect(
                         status().isUnauthorized()
                 );
@@ -86,14 +70,13 @@ public class UpdateWorkspaceMemberTests extends BaseTestWorkspaceMembers {
     public void shouldReturnHttp404WhenWorkspaceIsNotFound() throws Exception {
         doThrow(new WorkspaceNotFoundException())
                 .when(workspaceMemberService)
-                .updateWorkspaceMember(
+                .deleteWorkspaceMember(
                         any(User.class),
-                        eq(updateWorkspaceMemberRequest),
                         eq(workspace.getId()),
                         eq(workspaceMember.getId())
                 );
 
-        performUpdate(workspace.getId(), workspaceMember.getId(), updateWorkspaceMemberRequest,
+        performDelete(workspace.getId(), workspaceMember.getId(),
                 status().isNotFound(),
                 jsonPath("$.error").value("WORKSPACE_NOT_FOUND"),
                 jsonPath("$.message").value("Workspace not found"));
@@ -103,22 +86,37 @@ public class UpdateWorkspaceMemberTests extends BaseTestWorkspaceMembers {
     public void shouldReturnHttp404WhenWorkspaceMemberIsNotFound() throws Exception {
         doThrow(new WorkspaceMemberNotFoundException())
                 .when(workspaceMemberService)
-                .updateWorkspaceMember(
+                .deleteWorkspaceMember(
                         any(User.class),
-                        eq(updateWorkspaceMemberRequest),
                         eq(workspace.getId()),
                         eq(workspaceMember.getId())
                 );
 
-        performUpdate(workspace.getId(), workspaceMember.getId(), updateWorkspaceMemberRequest,
+        performDelete(workspace.getId(), workspaceMember.getId(),
                 status().isNotFound(),
                 jsonPath("$.error").value("WORKSPACE_MEMBER_NOT_FOUND"),
                 jsonPath("$.message").value("Workspace member not found"));
     }
 
     @Test
-    public void shouldReturnHttp200WhenRequestIsValid() throws Exception {
-        performUpdate(workspace.getId(), workspaceMember.getId(), updateWorkspaceMemberRequest,
-                status().isOk());
+    public void shouldReturnHttp409WhenWorkspaceMemberWasAlreadyDeleted() throws Exception {
+        doThrow(new WorkspaceMemberAlreadyDeletedException())
+                .when(workspaceMemberService)
+                .deleteWorkspaceMember(
+                        any(User.class),
+                        eq(workspace.getId()),
+                        eq(workspaceMember.getId())
+                );
+
+        performDelete(workspace.getId(), workspaceMember.getId(),
+                status().isConflict(),
+                jsonPath("$.error").value("WORKSPACE_MEMBER_ALREADY_DELETED"),
+                jsonPath("$.message").value("Workspace member has already been deleted"));
+    }
+
+    @Test
+    public void shouldReturnHttp204WhenRequestIsValid() throws Exception {
+        performDelete(workspace.getId(), workspaceMember.getId(),
+                status().isNoContent());
     }
 }
