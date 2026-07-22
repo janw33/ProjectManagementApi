@@ -44,6 +44,7 @@ public final class TestDataUtil {
                 .email("test@email.com")
                 .password("testPassword")
                 .createdAt(LocalDateTime.now())
+                .active(true)
                 .build();
     }
 
@@ -54,6 +55,7 @@ public final class TestDataUtil {
                 .email("test1@email.com")
                 .password("testPassword")
                 .createdAt(LocalDateTime.now())
+                .active(true)
                 .build();
     }
 
