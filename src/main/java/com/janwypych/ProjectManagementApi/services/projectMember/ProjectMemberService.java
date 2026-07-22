@@ -8,7 +8,9 @@ import com.janwypych.ProjectManagementApi.entities.user.User;
 import com.janwypych.ProjectManagementApi.entities.workspace.Workspace;
 import com.janwypych.ProjectManagementApi.entities.workspaceMember.WorkspaceMember;
 import com.janwypych.ProjectManagementApi.exceptions.project.ProjectNotFoundException;
+import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyDeletedException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyExistsException;
+import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.mappers.projectMember.ProjectMemberMapper;
@@ -74,5 +76,25 @@ public class ProjectMemberService {
         Page<ProjectMember> projectMembers = projectMemberRepository.findAllByProject(project, pageable);
 
         return projectMembers.map(projectMemberMapper::toResponse);
+    }
+
+    @Transactional
+    public void deleteProjectMember(User currentUser, Long workspaceId, Long projectId, Long memberId) {
+        WorkspaceMember currentWorkspaceMember = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        Workspace workspace = currentWorkspaceMember.getWorkspace();
+
+        Project project = projectRepository.findByIdAndWorkspace(projectId, workspace)
+                .orElseThrow(ProjectNotFoundException::new);
+
+        ProjectMember projectMember = projectMemberRepository.findByIdAndProject(memberId, project)
+                .orElseThrow(ProjectMemberNotFoundException::new);
+
+        if(!projectMember.isActive())
+            throw new ProjectMemberAlreadyDeletedException();
+
+        projectMember.setActive(false);
     }
 }

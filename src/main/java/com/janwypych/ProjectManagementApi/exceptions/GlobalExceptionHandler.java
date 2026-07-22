@@ -11,6 +11,7 @@ import com.janwypych.ProjectManagementApi.exceptions.auth.UsernameAlreadyExistsE
 import com.janwypych.ProjectManagementApi.exceptions.comment.CommentNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.error.ErrorResponse;
 import com.janwypych.ProjectManagementApi.exceptions.error.ValidationErrorResponse;
+import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyDeletedException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberAlreadyExistsException;
 import com.janwypych.ProjectManagementApi.exceptions.projectMember.ProjectMemberNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
@@ -324,6 +325,22 @@ public class GlobalExceptionHandler {
         ErrorResponse error = ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .error("INVITATION_ALREADY_PROCESSED")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(ProjectMemberAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleProjectMemberAlreadyDeletedException(
+            ProjectMemberAlreadyDeletedException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .error("PROJECT_MEMBER_ALREADY_DELETED")
                 .message(exception.getMessage())
                 .path(request.getRequestURI())
                 .timestamp(LocalDateTime.now())

@@ -39,4 +39,7 @@ public class ProjectMember {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_member_id", nullable = false)
     private WorkspaceMember workspaceMember;
+
+    @Column(nullable = false)
+    private boolean active = true;
 }

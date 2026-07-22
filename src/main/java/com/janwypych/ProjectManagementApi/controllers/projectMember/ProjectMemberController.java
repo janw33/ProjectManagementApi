@@ -41,4 +41,15 @@ public class ProjectMemberController {
     ) {
         return ResponseEntity.ok(projectMemberService.getProjectMembers(currentUser, workspaceId, projectId, pageable));
     }
+
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<Void> deleteProjectMember(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("workspaceId") Long workspaceId,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("memberId") Long memberId
+    ) {
+        projectMemberService.deleteProjectMember(currentUser, workspaceId, projectId, memberId);
+        return ResponseEntity.noContent().build();
+    }
 }
