@@ -158,6 +158,7 @@ public final class TestDataUtil {
                 .joinedAt(LocalDateTime.now())
                 .workspaceMember(workspaceMember)
                 .project(project)
+                .active(true)
                 .build();
     }
 
@@ -167,6 +168,7 @@ public final class TestDataUtil {
                 .joinedAt(LocalDateTime.now())
                 .workspaceMember(workspaceMember2)
                 .project(project)
+                .active(true)
                 .build();
     }
 
