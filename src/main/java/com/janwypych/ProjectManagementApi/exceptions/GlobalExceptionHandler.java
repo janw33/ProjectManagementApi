@@ -18,6 +18,7 @@ import com.janwypych.ProjectManagementApi.exceptions.task.TaskNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.user.UserNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspace.WorkspaceNotFoundException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.UserAlreadyWorkspaceMemberException;
+import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberAlreadyDeletedException;
 import com.janwypych.ProjectManagementApi.exceptions.workspaceMember.WorkspaceMemberNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -341,6 +342,22 @@ public class GlobalExceptionHandler {
         ErrorResponse error = ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .error("PROJECT_MEMBER_ALREADY_DELETED")
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(WorkspaceMemberAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleWorkspaceMemberAlreadyDeletedException(
+            WorkspaceMemberAlreadyDeletedException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .error("WORKSPACE_MEMBER_ALREADY_DELETED")
                 .message(exception.getMessage())
                 .path(request.getRequestURI())
                 .timestamp(LocalDateTime.now())

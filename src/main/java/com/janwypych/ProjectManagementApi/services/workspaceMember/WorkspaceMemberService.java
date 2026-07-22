@@ -65,4 +65,21 @@ public class WorkspaceMemberService {
             workspaceMember.setRole(request.getRole());
         }
     }
+
+    @Transactional
+    public void deleteWorkspaceMember(User currentUser, Long workspaceId, Long memberId) {
+        WorkspaceMember currentMember = workspaceMemberRepository
+                .findByWorkspaceIdAndUser(workspaceId, currentUser)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        Workspace workspace = currentMember.getWorkspace();
+
+        WorkspaceMember workspaceMember = workspaceMemberRepository.findByIdAndWorkspace(memberId, workspace)
+                .orElseThrow(WorkspaceMemberNotFoundException::new);
+
+        if(!workspaceMember.isActive())
+            throw new WorkspaceMemberAlreadyDeletedException();
+
+        workspaceMember.setActive(false);
+    }
 }

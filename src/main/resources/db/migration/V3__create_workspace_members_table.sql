@@ -4,6 +4,7 @@ CREATE TABLE workspace_members (
     user_id BIGINT NOT NULL,
     role VARCHAR(20) NOT NULL,
     joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
 
     CONSTRAINT fk_workspace_members_workspace
         FOREIGN KEY (workspace_id)
@@ -12,8 +13,7 @@ CREATE TABLE workspace_members (
 
     CONSTRAINT fk_workspace_members_user
         FOREIGN KEY (user_id)
-        REFERENCES users(id)
-        ON DELETE CASCADE,
+        REFERENCES users(id),
 
     CONSTRAINT uk_workspace_member
         UNIQUE (workspace_id, user_id)
